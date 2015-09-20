@@ -1,0 +1,18 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/grid_spacing"
+    tools:context=".MainActivityFragment">
+
+
+    <GridView
+        android:id="@+id/movieGridView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:horizontalSpacing="@dimen/grid_spacing"
+        android:numColumns="3"
+        />
+</RelativeLayout>

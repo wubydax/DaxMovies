@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/grid_poster_width"
+    android:layout_height="@dimen/grid_poster_height">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:src="@drawable/poster" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/semi_transp_title_bg_height"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@color/semi_transparent_black">
+
+        <TextView
+            android:id="@+id/movieTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center"
+            android:layout_marginLeft="@dimen/grid_spacing"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/white" />
+    </FrameLayout>
+
+
+</FrameLayout>
