@@ -1,5 +1,14 @@
 <resources>
-    <string name="app_name">Awesome Daxs Movies</string>
+    <string name="app_name">Awesome Dax\'s Movies</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="device_offline_title">Device Offline</string>
+    <string name="device_offline_message">Seems like there was a problem connecting to the internet. Please check your internet connection and try again.</string>
+    <string name="json_title" translatable = "false">title</string>
+    <string name="json_poster_path_segment" translatable = "false">poster_path</string>
+    <string name="db_poster_path_beginning" translatable = "false">http://image.tmdb.org/t/p/w185</string>
+    <string name="db_request"><![CDATA[http://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2015-07-21&certification_country=US&primary_release_date.lte=2015-09-21&sort_by=popularity.desc&api_key=e674a7b5d3ff614af0ef26806ce2d17b&page=]]></string>
 </resources>
