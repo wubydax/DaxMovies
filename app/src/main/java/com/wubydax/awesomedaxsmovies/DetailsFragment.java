@@ -14,6 +14,7 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,8 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
     private Context c;
     private String LOG_TAG = "DetailsFragment";
     private int width, height;
+    private FragmentCallbackListener mListener;
+    private String title;
 
 
     public DetailsFragment() {
@@ -64,7 +67,8 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
         TextView mDateText = (TextView) rootView.findViewById(R.id.detailDate);
         TextView mRatingText = (TextView) rootView.findViewById(R.id.detailRating);
         TextView mSynopsisText = (TextView) rootView.findViewById(R.id.detailSynopsis);
-            mTitleText.setText(jsonObject.getString("title"));
+            title = jsonObject.getString("title");
+            mTitleText.setText(title);
             mDateText.setText(jsonObject.getString("release_date"));
             mRatingText.setText(jsonObject.getString("vote_average"));
             mSynopsisText.setText(jsonObject.getString("overview"));
@@ -76,8 +80,20 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
         Drawable bg = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(twice, width, height, true));
 
         rootView.setBackgroundDrawable(bg);
+        Palette palette = Palette.generate(convertDrawableToBitmap(mBg));
+        int mainColor = palette.getVibrantColor(0);
+        if(mainColor == 0){
+            mainColor = palette.getDarkMutedColor(0);
+        }
+        mListener.onFragmentCall(title, mainColor);
 
         return rootView;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mListener.onFragmentCall(getString(R.string.app_name), getResources().getColor(R.color.primary));
     }
 
     private Bitmap convertDrawableToBitmap(Drawable drawable){
@@ -123,5 +139,19 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
 
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (FragmentCallbackListener) activity;
+        }catch (ClassCastException e){
+            Log.e(LOG_TAG, "onAttach Activity must implement the interface", e);
+        }
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
 }
