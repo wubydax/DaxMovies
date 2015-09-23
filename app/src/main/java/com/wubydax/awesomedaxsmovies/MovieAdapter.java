@@ -31,9 +31,6 @@ public class MovieAdapter extends BaseAdapter {
         c = context;
         mList = jsonObjectList;
         LOG_TAG = "MovieAdapter";
-        Picasso picasso = new Picasso.Builder(c)
-                .memoryCache(new LruCache(96*1024*1024))
-                .build();
 
 
 
@@ -91,7 +88,6 @@ public class MovieAdapter extends BaseAdapter {
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
         viewHolder.mTitle.setText(mTitle);
         Picasso.with(c).load(mFullUrl).resize(imageWidth, imageHeight).into(viewHolder.mPoster);
-        Picasso.with(c).setIndicatorsEnabled(true);
 
         return convertView;
     }

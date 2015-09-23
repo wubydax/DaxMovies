@@ -2,6 +2,8 @@ package com.wubydax.awesomedaxsmovies;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -13,7 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.json.JSONArray;
@@ -41,27 +45,45 @@ public class MainActivityFragment extends Fragment {
     private SharedPreferences mPrefs;
     private SharedPreferences.Editor mEditor;
     private MovieAdapter mAdapter;
+    private List<JSONObject> mList;
 
     public MainActivityFragment() {
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         c = getActivity();
         LOG_TAG = "MainActivityFragment";
         mPrefs = PreferenceManager.getDefaultSharedPreferences(c);
         mEditor = mPrefs.edit();
-        View rootView = inflater.inflate(R.layout.fragment_movies_grid, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_movies_grid, container, false);
         mGridView = (GridView) rootView.findViewById(R.id.movieGridView);
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.GONE);
         String[] requestedPagesUrls = new String[3];
-        for(int i=1; i<4; i++){
-            requestedPagesUrls[i-1] = c.getString(R.string.db_request)+String.valueOf(i).toString();
+        for (int i = 1; i < 4; i++) {
+            requestedPagesUrls[i - 1] = c.getString(R.string.db_request) + String.valueOf(i).toString();
         }
         createData(requestedPagesUrls);
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ImageView mThumbnail = (ImageView) view.findViewById(R.id.moviePoster);
+                Drawable mDrawable = mThumbnail.getDrawable();
+                if (mList != null && mList.size() > 0) {
+
+                    JSONObject jsonToPass = mList.get(i);
+
+                    DetailsFragment df = new DetailsFragment();
+                    df.getBackground(mDrawable);
+                    df.getJSONObject(jsonToPass);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.add(container.getId(), df).addToBackStack(null).commit();
+                }
+            }
+        });
         return rootView;
     }
 
@@ -78,7 +100,7 @@ public class MainActivityFragment extends Fragment {
             @Override
             protected String[] doInBackground(String... params) {
                 String[] jsonStringArray = new String[3];
-                for (int i=0; i<params.length; i++){
+                for (int i = 0; i < params.length; i++) {
                     jsonStringArray[i] = getRequest(params[i]);
                 }
 
@@ -86,7 +108,7 @@ public class MainActivityFragment extends Fragment {
 
             }
 
-            private String getRequest(String url){
+            private String getRequest(String url) {
                 HttpURLConnection mConnection = null;
                 String jsonString = null;
                 if (isConnected()) {
@@ -103,7 +125,7 @@ public class MainActivityFragment extends Fragment {
                     } catch (IOException e) {
                         Log.e(LOG_TAG, "doInBackground ", e);
                     } finally {
-                        if(mConnection!=null){
+                        if (mConnection != null) {
                             mConnection.disconnect();
                         }
                     }
@@ -119,21 +141,21 @@ public class MainActivityFragment extends Fragment {
                 String retrievedString = null;
                 StringBuffer stringBuffer = new StringBuffer();
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                if(is != null) {
+                if (is != null) {
                     String line;
-                    while((line = br.readLine()) != null){
+                    while ((line = br.readLine()) != null) {
                         stringBuffer.append(line + "\n");
                     }
-                    if(stringBuffer.length() >0){
+                    if (stringBuffer.length() > 0) {
                         retrievedString = stringBuffer.toString();
                     }
-                }else {
+                } else {
                     retrievedString = null;
                 }
-                if(br != null){
+                if (br != null) {
                     try {
                         br.close();
-                    }catch (IOException e){
+                    } catch (IOException e) {
                         Log.e(LOG_TAG, "getStringFromInputStream error closing BufferedReader ", e);
                     }
                 }
@@ -157,15 +179,11 @@ public class MainActivityFragment extends Fragment {
                 }
             }
 
-            private List<JSONObject> buildJsonObjectList(String[] jsonStringArray){
-                List<JSONObject> mList = new ArrayList<>();
-                String mTitle = "";
-                String mSynopsis = "";
-                String mUrl = "";
-                String mRating = "";
-                String mDate = "";
+            private List<JSONObject> buildJsonObjectList(String[] jsonStringArray) {
+                mList = new ArrayList<>();
+
                 try {
-                    for(int j=0; j<jsonStringArray.length; j++) {
+                    for (int j = 0; j < jsonStringArray.length; j++) {
                         JSONObject mJsonMain = new JSONObject(jsonStringArray[j]);
                         JSONArray mainArray = mJsonMain.getJSONArray("results");
                         for (int i = 0; i < mainArray.length(); i++) {
@@ -175,7 +193,8 @@ public class MainActivityFragment extends Fragment {
                         }
                     }
                 } catch (JSONException e) {
-                    Log.e(LOG_TAG, "buildJsonObjectList ", e);                }
+                    Log.e(LOG_TAG, "buildJsonObjectList ", e);
+                }
                 return mList;
             }
 
