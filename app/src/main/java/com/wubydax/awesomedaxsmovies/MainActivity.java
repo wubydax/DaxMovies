@@ -57,16 +57,12 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
     }
 
     @Override
-    public void onFragmentCall(String title, int color) {
+    public void onFragmentCall(String title, int color, int colorDark) {
         setTitle(title);
-        float[] hsv = new float[3];
-        Color.colorToHSV(color, hsv);
-        hsv[2] *= 0.8f;
-        int colorPrimaryDark = Color.HSVToColor(hsv);
         ColorDrawable colorDrawable = new ColorDrawable(color);
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
         if(Build.VERSION.SDK_INT>=21){
-            getWindow().setStatusBarColor(colorPrimaryDark);
+            getWindow().setStatusBarColor(colorDark);
         }
     }
 }

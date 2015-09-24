@@ -40,6 +40,7 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
     private int width, height;
     private FragmentCallbackListener mListener;
     private String title;
+    Utils utils;
 
 
     public DetailsFragment() {
@@ -51,6 +52,7 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         c = getActivity();
+        utils = new Utils(c);
         width = Math.round(getResources().getDimension(R.dimen.blured_image_width));
         height = Math.round(getResources().getDimension(R.dimen.blured_image_height));
         View rootView = inflater. inflate(R.layout.fragment_details, container, false);
@@ -80,12 +82,10 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
         Drawable bg = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(twice, width, height, true));
 
         rootView.setBackgroundDrawable(bg);
-        Palette palette = Palette.generate(convertDrawableToBitmap(mBg));
-        int mainColor = palette.getVibrantColor(0);
-        if(mainColor == 0){
-            mainColor = palette.getDarkMutedColor(0);
-        }
-        mListener.onFragmentCall(title, mainColor);
+        int colorPrimary = utils.getColor(convertDrawableToBitmap(mBg));
+        int colorPrimaryDark = utils.darkenColor(colorPrimary);
+
+        mListener.onFragmentCall(title, colorPrimary, colorPrimaryDark);
 
         return rootView;
     }
@@ -93,7 +93,7 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
     @Override
     public void onStop() {
         super.onStop();
-        mListener.onFragmentCall(getString(R.string.app_name), getResources().getColor(R.color.primary));
+        mListener.onFragmentCall(getString(R.string.app_name), getResources().getColor(R.color.primary), getResources().getColor(R.color.primary_dark));
     }
 
     private Bitmap convertDrawableToBitmap(Drawable drawable){
@@ -140,10 +140,10 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mListener = (FragmentCallbackListener) activity;
+            mListener = (FragmentCallbackListener) context;
         }catch (ClassCastException e){
             Log.e(LOG_TAG, "onAttach Activity must implement the interface", e);
         }
