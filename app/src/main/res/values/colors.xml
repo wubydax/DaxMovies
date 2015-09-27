@@ -2,8 +2,8 @@
 <resources>
     <color name="semi_transparent_black">#77000000</color>
     <color name="transparent_black">#00000000</color>
-    <color name="primary">#2196F3</color>
-    <color name="primary_dark">#1976D2</color>
+    <color name="primary">#903838</color>
+    <color name="primary_dark">#732C2C</color>
     <color name="primary_light">#BBDEFB</color>
     <color name="accent">#009688</color>
     <color name="primary_text">#212121</color>

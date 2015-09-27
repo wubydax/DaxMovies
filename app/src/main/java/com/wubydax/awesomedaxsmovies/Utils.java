@@ -3,13 +3,19 @@ package com.wubydax.awesomedaxsmovies;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.graphics.Palette;
+import android.util.Log;
 
 /**
  * Created by dax on 24/09/15.
  */
 public class Utils {
+    Context context;
+    String LOG_TAG;
     public Utils(Context context){
+        this.context = context;
+        LOG_TAG = "Utils";
 
     }
 
@@ -45,5 +51,35 @@ public class Utils {
         }
 
         return isBright;
+    }
+
+    public Bitmap blurBitmap(Bitmap bitmap, int width, int height) {
+        try {
+            android.support.v8.renderscript.RenderScript rs = android.support.v8.renderscript.RenderScript.create(context);
+            android.support.v8.renderscript.Allocation allocation = android.support.v8.renderscript.Allocation.createFromBitmap(rs, bitmap);
+
+            android.support.v8.renderscript.ScriptIntrinsicBlur blur = android.support.v8.renderscript.ScriptIntrinsicBlur.create(rs, android.support.v8.renderscript.Element.U8_4(rs));
+            blur.setRadius(25);
+            blur.setInput(allocation);
+
+            Bitmap blurredBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            android.support.v8.renderscript.Allocation outAlloc = android.support.v8.renderscript.Allocation.createFromBitmap(rs, blurredBitmap);
+
+            blur.forEach(outAlloc);
+            outAlloc.copyTo(blurredBitmap);
+
+            rs.destroy();
+            return blurredBitmap;
+        } catch (Exception e) {
+            Log.d(LOG_TAG, "blurBitmap error bluring bitmap ", e);
+            return bitmap;
+        }
+
+    }
+
+    public Drawable getRatingImage(Double rating){
+        int roundedRating = (int) Math.round(rating);
+        int mIdentifier = context.getResources().getIdentifier("rating_" + String.valueOf(roundedRating), "drawable", context.getPackageName());
+        return context.getResources().getDrawable(mIdentifier);
     }
 }

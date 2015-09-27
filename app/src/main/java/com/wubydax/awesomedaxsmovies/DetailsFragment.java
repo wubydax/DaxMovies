@@ -1,29 +1,22 @@
 package com.wubydax.awesomedaxsmovies;
 
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
-import android.support.v7.graphics.Palette;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,14 +25,16 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DetailsFragment extends android.support.v4.app.Fragment{
-    private Drawable mBg;
+public class DetailsFragment extends Fragment {
+    private Bitmap mBg;
     private JSONObject jsonObject;
     private Context c;
     private String LOG_TAG = "DetailsFragment";
     private int width, height;
     private FragmentCallbackListener mListener;
-    private String title;
+    private String mTitle, mDate, mRating, mSynopsis;
+    private double mRatingDouble;
+    private DataFragment dataFragment;
     Utils utils;
 
 
@@ -47,6 +42,27 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem sort = menu.findItem(R.id.action_sort);
+        sort.setVisible(false);
+        getActivity().invalidateOptionsMenu();
+        super.onCreateOptionsMenu(menu, inflater);
+
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        dataFragment.setDetailsData(jsonObject, mBg);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,40 +71,58 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
         utils = new Utils(c);
         width = Math.round(getResources().getDimension(R.dimen.blured_image_width));
         height = Math.round(getResources().getDimension(R.dimen.blured_image_height));
-        View rootView = inflater. inflate(R.layout.fragment_details, container, false);
-        try {
-        ImageView mPosterView = (ImageView) rootView.findViewById(R.id.detailPoster);
+        dataFragment = (DataFragment) getFragmentManager().findFragmentByTag("data");
+        jsonObject = dataFragment.getJson();
+        mBg = dataFragment.getBitmap();
 
-            Picasso.with(c).
-                    load(getString(R.string.db_poster_path_beginning) + jsonObject.getString("poster_path"))
-                    .resize(Math.round(getResources().getDimension(R.dimen.detail_poster_width)),
-                            Math.round(getResources().getDimension(R.dimen.detail_poster_height)))
-                    .into(mPosterView);
-
+        View rootView = inflater.inflate(R.layout.fragment_details, container, false);
         TextView mTitleText = (TextView) rootView.findViewById(R.id.detailTitle);
         TextView mDateText = (TextView) rootView.findViewById(R.id.detailDate);
         TextView mRatingText = (TextView) rootView.findViewById(R.id.detailRating);
         TextView mSynopsisText = (TextView) rootView.findViewById(R.id.detailSynopsis);
-            title = jsonObject.getString("title");
-            mTitleText.setText(title);
-            mDateText.setText(jsonObject.getString("release_date"));
-            mRatingText.setText(jsonObject.getString("vote_average"));
-            mSynopsisText.setText(jsonObject.getString("overview"));
+        ImageView mPosterView = (ImageView) rootView.findViewById(R.id.detailPoster);
+        ImageView mRatingStars = (ImageView) rootView.findViewById(R.id.ratingImage);
+        mPosterView.setImageBitmap(mBg);
+
+        try {
+            mTitle = jsonObject.getString(c.getString(R.string.json_title));
+            mDate = jsonObject.getString(c.getString(R.string.json_release_date));
+            mRating = jsonObject.getString(c.getString(R.string.json_vote_average));
+            mSynopsis = jsonObject.getString(c.getString(R.string.json_synopsis));
+            mRatingDouble = Double.parseDouble(mRating);
+            mTitleText.setText(mTitle);
+            mDateText.setText(String.format(getString(R.string.details_release_date), mDate));
+            mRatingText.setText(String.format(getString(R.string.details_rating), mRating));
+            mSynopsisText.setText(mSynopsis);
+            mRatingStars.setImageDrawable(utils.getRatingImage(mRatingDouble));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Bitmap bitmap = blurBitmap(convertDrawableToBitmap(mBg), mBg.getIntrinsicWidth(), mBg.getIntrinsicHeight());
-        Bitmap twice = blurBitmap(bitmap, mBg.getIntrinsicWidth(), mBg.getIntrinsicHeight());
-        Drawable bg = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(twice, width, height, true));
 
-        rootView.setBackgroundDrawable(bg);
-        int colorPrimary = utils.getColor(convertDrawableToBitmap(mBg));
+        Bitmap bitmap = utils.blurBitmap(mBg, mBg.getWidth(), mBg.getHeight());
+        Bitmap twice = utils.blurBitmap(bitmap, mBg.getWidth(), mBg.getHeight());
+        Bitmap landscape = Bitmap.createBitmap(twice,
+                0,
+                twice.getHeight() / 3,
+                twice.getWidth(),
+                Math.round(twice.getWidth() / 1.5F));
+        Drawable bgPortrait = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(twice, width, height, true));
+        Drawable bgLandscape = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(landscape, height, width, true));
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            rootView.setBackgroundDrawable(bgPortrait);
+        } else {
+            rootView.setBackgroundDrawable(bgLandscape);
+        }
+
+        int colorPrimary = utils.getColor(mBg);
         int colorPrimaryDark = utils.darkenColor(colorPrimary);
 
-        mListener.onFragmentCall(title, colorPrimary, colorPrimaryDark);
+        mListener.onFragmentCall(mTitle, colorPrimary, colorPrimaryDark);
 
         return rootView;
     }
+
 
     @Override
     public void onStop() {
@@ -96,55 +130,13 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
         mListener.onFragmentCall(getString(R.string.app_name), getResources().getColor(R.color.primary), getResources().getColor(R.color.primary_dark));
     }
 
-    private Bitmap convertDrawableToBitmap(Drawable drawable){
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.draw(canvas);
-        return bitmap;
-    }
-
-    private Bitmap blurBitmap(Bitmap bitmap, int width, int height){
-        try
-        {
-            android.support.v8.renderscript.RenderScript rs = android.support.v8.renderscript.RenderScript.create(c);
-            android.support.v8.renderscript.Allocation allocation = android.support.v8.renderscript.Allocation.createFromBitmap(rs, bitmap);
-
-            android.support.v8.renderscript.ScriptIntrinsicBlur blur = android.support.v8.renderscript.ScriptIntrinsicBlur.create(rs, android.support.v8.renderscript.Element.U8_4(rs));
-            blur.setRadius(25);
-            blur.setInput(allocation);
-
-            Bitmap blurredBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            android.support.v8.renderscript.Allocation outAlloc = android.support.v8.renderscript.Allocation.createFromBitmap(rs, blurredBitmap);
-
-            blur.forEach(outAlloc);
-            outAlloc.copyTo(blurredBitmap);
-
-            rs.destroy();
-            return blurredBitmap;
-        }
-        catch (Exception e) {
-            Log.d(LOG_TAG, "blurBitmap error bluring bitmap ", e);
-            return bitmap;
-        }
-
-    }
-
-    public void getBackground(Drawable drawable){
-        mBg = drawable;
-    }
-
-    public void getJSONObject(JSONObject json){
-        jsonObject = json;
-
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
             mListener = (FragmentCallbackListener) context;
-        }catch (ClassCastException e){
+        } catch (ClassCastException e) {
             Log.e(LOG_TAG, "onAttach Activity must implement the interface", e);
         }
     }
@@ -154,4 +146,5 @@ public class DetailsFragment extends android.support.v4.app.Fragment{
         super.onDetach();
         mListener = null;
     }
+
 }

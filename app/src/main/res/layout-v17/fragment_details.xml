@@ -26,8 +26,9 @@
                     android:layout_width="@dimen/detail_poster_width"
                     android:layout_height="@dimen/detail_poster_height"
                     android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:background="@drawable/poster_bg_stroke" />
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:background="@drawable/poster_bg_stroke"
+                    android:src="@drawable/poster" />
 
                 <TextView
                     android:id="@+id/detailTitle"
@@ -36,6 +37,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/detailPoster"
                     android:layout_toRightOf="@+id/detailPoster"
+                    android:text="Large Text"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@android:color/white" />
 
@@ -46,27 +48,29 @@
                     android:layout_above="@+id/detailRating"
                     android:layout_alignLeft="@+id/detailTitle"
                     android:layout_alignStart="@+id/detailTitle"
-                    android:layout_marginBottom="@dimen/details_fragment_textview_margin_vertical"
+                    android:text="@string/details_release_date"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="10dp"/>
 
                 <TextView
                     android:id="@+id/detailRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/ratingImage"
                     android:layout_alignLeft="@+id/detailDate"
                     android:layout_alignStart="@+id/detailDate"
+                    android:text="@string/details_rating"
+                    android:layout_above="@+id/ratingImage"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@android:color/white" />
-
                 <ImageView
                     android:id="@+id/ratingImage"
-                    android:layout_width="@dimen/rating_image_width"
-                    android:layout_height="@dimen/rating_image_height"
+                    android:layout_width="116dp"
+                    android:layout_height="48dp"
                     android:layout_alignBottom="@+id/detailPoster"
+                    android:layout_toRightOf="@id/detailPoster"
                     android:layout_toEndOf="@+id/detailPoster"
-                    android:layout_toRightOf="@id/detailPoster" />
+                    android:src="@drawable/rating_5"/>
 
                 <TextView
                     android:id="@+id/detailSynopsis"
@@ -75,14 +79,14 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/detailPoster"
+                    android:text="Small Text"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/white"
                     android:textSize="16dp" />
 
+
             </RelativeLayout>
-
         </ScrollView>
-
     </RelativeLayout>
 
 </RelativeLayout>

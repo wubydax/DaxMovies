@@ -1,0 +1,32 @@
+<resources>
+
+    <string name="app_name">הסרטים של דקס</string>
+
+    <!-- Strings for various dialogs -->
+    <string name="device_offline_title">מצב לא מכוון</string>
+    <string name="device_offline_message">נראה כי היתה בעיה להתחבר לאינטרנט. אנא בדוק את מצב החיבור של מכשירך לאינטרנט ונסה לפתוח את היישום שנית.</string>
+    <string name="no_data_message">נראה כי אירעה שגיאה בטעינת נתונים מהרשת.\n\מכשירך אומנם מחובר לאינטרנט, אך ייתכן והחיבור איטי או לא תקין.\n\nבמקרה של תקלה נשנית או במידה ואין בעיה לגלוש באינטרנט ביישומים אחרים, אנא צרו איתנו קשר באמצעות Google Play.</string>
+    <string name="no_data_title">שגיאה בטעינת נתונים</string>
+    <string name="sort_dialog_title">מיין סרטים לפי</string>
+    <string-array name="dialog_sort_options">
+        <item>פופולריות (ברירת מחדל)</item>
+        <item>דירוג צופים</item>
+    </string-array>
+
+    <!--Json parsing and retrieving related strings -->
+    <string name="json_title" translatable = "false">title</string>
+    <string name="json_poster_path_segment" translatable = "false">poster_path</string>
+    <string name="json_release_date" translatable = "false">release_date</string>
+    <string name="json_vote_average" translatable = "false">vote_average</string>
+    <string name="json_synopsis" translatable = "false">overview</string>
+    <string name="db_poster_path_beginning" translatable = "false">http://image.tmdb.org/t/p/w185</string>
+    <string name="db_request_popularity" translatable = "false"><![CDATA[http://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2015-07-26&primary_release_date.lte=2015-09-26&certification_country=US&sort_by=popularity.desc&api_key=e674a7b5d3ff614af0ef26806ce2d17b&page=]]></string>
+
+    <!--Menu strings -->
+    <string name="menu_action_sort">מיין</string>
+
+    <!--Details fragment text views strings -->
+    <string name="details_rating">דירוג הצופים: %1$s</string>
+    <string name="details_release_date">תאריך בכורה: %1$s</string>
+
+</resources>

@@ -1,0 +1,32 @@
+<resources>
+
+    <string name="app_name">Новинки синематографа</string>
+
+    <!-- Strings for various dialogs -->
+    <string name="device_offline_title">Аппарат в оффлайновом режиме</string>
+    <string name="device_offline_message">Похоже, есть проблема с подключением к Интернету. Пожалуйста, проверьте ваше интернет-соединение и попробуйте снова.</string>
+    <string name="no_data_message">Произошла неувязка при загрузке данных с сервера.\n\nПохоже, что ваше устройство подключено к сети, но соединение слишком медленное или неисправное.\n\nЕсли проблема на разрешится, и у вас нет проблем с подключением к Интернету в других приложениях, пожалуйста, свяжитесь с нами через раздел комментариев на Google Play.</string>
+    <string name="no_data_title">Ошибка при загрузке данных</string>
+    <string name="sort_dialog_title">Сортировка списка по</string>
+    <string-array name="dialog_sort_options">
+        <item>Популярности фильма (по умолчанию)</item>
+        <item>Рейтинга зрителей</item>
+    </string-array>
+
+    <!--Json parsing and retrieving related strings -->
+    <string name="json_title" translatable = "false">title</string>
+    <string name="json_poster_path_segment" translatable = "false">poster_path</string>
+    <string name="json_release_date" translatable = "false">release_date</string>
+    <string name="json_vote_average" translatable = "false">vote_average</string>
+    <string name="json_synopsis" translatable = "false">overview</string>
+    <string name="db_poster_path_beginning" translatable = "false">http://image.tmdb.org/t/p/w185</string>
+    <string name="db_request_popularity" translatable = "false"><![CDATA[http://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2015-07-26&primary_release_date.lte=2015-09-26&certification_country=US&sort_by=popularity.desc&api_key=e674a7b5d3ff614af0ef26806ce2d17b&page=]]></string>
+
+    <!--Menu strings -->
+    <string name="menu_action_sort">Сортировка</string>
+
+    <!--Details fragment text views strings -->
+    <string name="details_rating">Рейтинг зрителей: %1$s</string>
+    <string name="details_release_date">Дата примьеры: %1$s</string>
+
+</resources>
