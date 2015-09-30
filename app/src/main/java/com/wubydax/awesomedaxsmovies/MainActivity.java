@@ -14,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity implements FragmentCallbackListener, FragmentManager.OnBackStackChangedListener {
     MainViewFragment mainViewFragment;
     String FRAGMENT_TAG;
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
             case (R.id.action_sort):
                 Dialog mDialog = new AlertDialog.Builder(this)
                         .setTitle(R.string.sort_dialog_title)
-                        .setSingleChoiceItems(getResources().getStringArray(R.array.dialog_sort_options), sp.getInt("sort_by", 0), new DialogInterface.OnClickListener() {
+                        .setSingleChoiceItems(getResources().getStringArray(R.array.dialog_sort_options), Arrays.asList(getResources().getStringArray(R.array.dialog_sort_values)).indexOf(sp.getString("sort_by", "popularity")), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 int selectedItem = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                                ed.putInt("sort_by", selectedItem).apply();
+                                ed.putString("sort_by", getResources().getStringArray(R.array.dialog_sort_values)[selectedItem]).apply();
 
                             }
                         })

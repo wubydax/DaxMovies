@@ -11,6 +11,7 @@
     <string-array name="dialog_sort_options">
         <item>Популярности фильма (по умолчанию)</item>
         <item>Рейтинга зрителей</item>
+        <item>Дате примьеры</item>
     </string-array>
 
     <!--Json parsing and retrieving related strings -->
