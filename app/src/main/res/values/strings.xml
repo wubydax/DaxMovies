@@ -37,7 +37,7 @@
     <string name="details_release_date">Released: %1$s</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="share_intent_string">Hi! I found this movie called \"%1$s\" and it looks really nice. Check it out \n%2$s</string>
     <string name="action_settings">Settings</string>
 
 </resources>

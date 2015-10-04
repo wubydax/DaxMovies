@@ -10,18 +10,10 @@
     <string name="sort_dialog_title">Сортировка списка по</string>
     <string-array name="dialog_sort_options">
         <item>Популярности фильма (по умолчанию)</item>
-        <item>Рейтинга зрителей</item>
+        <item>Рейтингу зрителей</item>
         <item>Дате примьеры</item>
     </string-array>
 
-    <!--Json parsing and retrieving related strings -->
-    <string name="json_title" translatable = "false">title</string>
-    <string name="json_poster_path_segment" translatable = "false">poster_path</string>
-    <string name="json_release_date" translatable = "false">release_date</string>
-    <string name="json_vote_average" translatable = "false">vote_average</string>
-    <string name="json_synopsis" translatable = "false">overview</string>
-    <string name="db_poster_path_beginning" translatable = "false">http://image.tmdb.org/t/p/w185</string>
-    <string name="db_request_popularity" translatable = "false"><![CDATA[http://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2015-07-26&primary_release_date.lte=2015-09-26&certification_country=US&sort_by=popularity.desc&api_key=e674a7b5d3ff614af0ef26806ce2d17b&page=]]></string>
 
     <!--Menu strings -->
     <string name="menu_action_sort">Сортировка</string>
@@ -29,5 +21,7 @@
     <!--Details fragment text views strings -->
     <string name="details_rating">Рейтинг зрителей: %1$s</string>
     <string name="details_release_date">Дата примьеры: %1$s</string>
+    <string name="share_intent_string">Привет! Тут киношка, называется \"%1$s\". По-моему не плохой фильм. Вот ссылка \n%2$s</string>
+
 
 </resources>

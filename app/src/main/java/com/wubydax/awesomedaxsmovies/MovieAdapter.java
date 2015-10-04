@@ -27,7 +27,7 @@ import java.util.List;
  * Created by Anna Berkovitch on 21/09/2015.
  */
 public class MovieAdapter extends BaseAdapter implements Filterable {
-    List<JSONObject> filteredList, passedList;
+    List<MovieData> filteredList, passedList;
     Context c;
     String LOG_TAG;
     int width, height;
@@ -35,7 +35,7 @@ public class MovieAdapter extends BaseAdapter implements Filterable {
     List<Bitmap> bitmapList;
     DataFragment dataFragment;
 
-    public MovieAdapter(Context context, List<JSONObject> jsonObjectList, int imageWidth, int imageHeight) {
+    public MovieAdapter(Context context, List<MovieData> jsonObjectList, int imageWidth, int imageHeight) {
         c = context;
         passedList = jsonObjectList;
         filteredList = passedList;
@@ -56,20 +56,14 @@ public class MovieAdapter extends BaseAdapter implements Filterable {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults fr = new FilterResults();
-                ArrayList<JSONObject> ai = new ArrayList<>();
+                ArrayList<MovieData> ai = new ArrayList<>();
 
                 for (int i = 0; i < passedList.size(); i++) {
                     String label;
-                    try {
-                        label = passedList.get(i).getString(c.getString(R.string.json_title));
+                        label = passedList.get(i).getTitle();
                         if (label.toLowerCase().contains(constraint.toString().toLowerCase())) {
                             ai.add(passedList.get(i));
                         }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
                 }
 
                 fr.count = ai.size();
@@ -80,9 +74,9 @@ public class MovieAdapter extends BaseAdapter implements Filterable {
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                filteredList = (List<JSONObject>) results.values;
+                filteredList = (List<MovieData>) results.values;
                 notifyDataSetChanged();
-                dataFragment.setJsonData(filteredList);
+                dataFragment.setMovieData(filteredList);
             }
         };
         return filter;
@@ -132,13 +126,10 @@ public class MovieAdapter extends BaseAdapter implements Filterable {
         String mFullUrl = "";
         ViewHolder vh;
 
-        try {
-            mTitle = filteredList.get(position).getString(c.getString(R.string.json_title));
-            mUrlLastSegment = filteredList.get(position).getString(c.getString(R.string.json_poster_path_segment));
+            mTitle = filteredList.get(position).getTitle();
+            mUrlLastSegment = filteredList.get(position).getPosterPath();
             mFullUrl = c.getString(R.string.db_poster_path_beginning) + mUrlLastSegment;
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, "getView ", e);
-        }
+
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.grid_view_item_layout, null, false);

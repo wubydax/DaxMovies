@@ -13,9 +13,11 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class DataFragment extends Fragment {
-    private JSONObject jsonObject;
+    private MovieData movieData;
     private Bitmap posterBitmap;
-    private List<JSONObject> jsonList;
+    private List<MovieData> movieDataList;
+    private List<String> ids;
+    private boolean isSearch;
 
 
     public DataFragment() {
@@ -28,27 +30,45 @@ public class DataFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    public void setDetailsData(JSONObject json, Bitmap poster) {
-        jsonObject = json;
+    public void setDetailsData(MovieData movieData, Bitmap poster) {
+        this.movieData =  movieData;
         posterBitmap = poster;
 
     }
 
-    public void setJsonData(List<JSONObject> jsonList) {
-        this.jsonList = jsonList;
+    public void setMovieData(List<MovieData> movieDataList) {
+        this.movieDataList = movieDataList;
 
     }
 
-    public List<JSONObject> getJsonList() {
-        return jsonList;
+    public void setIdsData(List<String> ids){
+        this.ids = ids;
     }
 
-    public JSONObject getJson() {
-        return jsonObject;
+    public void setSearchBoolean(boolean isSearch){
+        this.isSearch = isSearch;
     }
+
+    public List<MovieData> getMovieDataList() {
+        return movieDataList;
+    }
+
+    public List<String> getIdsList(){
+        return ids;
+    }
+
+    public MovieData getMovieData() {
+        return movieData;
+    }
+
+
 
     public Bitmap getBitmap() {
         return posterBitmap;
+    }
+
+    public boolean getSearchStatus(){
+        return isSearch;
     }
 
 

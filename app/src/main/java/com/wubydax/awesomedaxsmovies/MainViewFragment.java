@@ -13,15 +13,16 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +36,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,21 +65,19 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
     private String LOG_TAG, SORT_KEY;
     private String jsonTitle, jsonDate, jsonPopularity, jsonRating, jsonSynopsis;
     private GridView mGridView;
-    private View loadingMoreView, searchView;
+    private View searchView;
+    SwipeRefreshLayout swipeRefreshLayout;
     private EditText searchEditText;
-    private ProgressBar mProgressBar;
     private SharedPreferences mPrefs;
-    private SharedPreferences.Editor mEditor;
     private MovieAdapter mAdapter;
-    private List<JSONObject> mList;
+    private List<MovieData> mList;
+    private List<String> ids;
     private Parcelable state;
     private int width, height;
-    private int pagesNumber;
+    private int pagesNumber = 1;
     private DataFragment dataFragment;
     private FragmentCallbackListener mListener;
-    private boolean isLoading = false, isSorting = false;
-    private Handler mHandler;
-    private Runnable manageSearch;
+    private boolean isLoading = false, isSorting = false, isSearch = false;
     private MenuItem sort;
 
     public MainViewFragment() {
@@ -100,7 +101,6 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
         LOG_TAG = "MainViewFragment";
         SORT_KEY = "sort_by";
         mPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-        mEditor = mPrefs.edit();
         dataFragment = (DataFragment) getFragmentManager().findFragmentByTag("data");
         if (dataFragment == null) {
             dataFragment = new DataFragment();
@@ -121,14 +121,6 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
         }
         width = (dispWidth - spacing * 4) / columns;
         height = Math.round(width * 1.5F);
-        mHandler = new Handler();
-        manageSearch = new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        };
-
         setHasOptionsMenu(true);
 
     }
@@ -154,30 +146,16 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
         final View rootView = inflater.inflate(R.layout.fragment_movies_grid, container, false);
 
         mGridView = (GridView) rootView.findViewById(R.id.movieGridView);
-        loadingMoreView = rootView.findViewById(R.id.footerContainer);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        isLoading = swipeRefreshLayout.isRefreshing();
         searchView = rootView.findViewById(R.id.searchContainer);
         searchEditText = (EditText) rootView.findViewById(R.id.searchEditText);
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        mProgressBar.setVisibility(View.GONE);
-
-
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                ImageView mThumbnail = (ImageView) view.findViewById(R.id.moviePoster);
-                Drawable mDrawable = mThumbnail.getDrawable();
-                Bitmap bitmap = ((BitmapDrawable) mDrawable).getBitmap();
-
-                if (mList != null && mList.size() > 0) {
-
-                    JSONObject jsonToPass = mList.get(i);
-                    dataFragment.setDetailsData(jsonToPass, bitmap);
-                    mListener.onListItemClick();
-
-                }
-            }
-        });
+        swipeRefreshLayout.setEnabled(false);
+        swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         return rootView;
     }
@@ -189,12 +167,17 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
 
         if (savedInstanceState == null) {
             //specifically for popfrombackstack which does not preserve instance
-            mList = dataFragment.getJsonList();
-            pagesNumber = 1;
+            mList = dataFragment.getMovieDataList();
+            ids = dataFragment.getIdsList();
+            if (dataFragment.getSearchStatus()) {
+                searchEditText.requestFocus();
+                isLoading = true;
+            }
             //if not from back stack and savedInstanceState is null means new app launch
             //so we create list
             if (mList == null) {
-                mList = new ArrayList<>();
+                mList = new ArrayList<MovieData>();
+                ids = new ArrayList<String>();
                 createData(getUrl());
             } else {
                 mAdapter = new MovieAdapter(c, mList, width, height);
@@ -202,20 +185,71 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
             }
         } else {
             pagesNumber = savedInstanceState.getInt("pageNumber");
-            mList = dataFragment.getJsonList();
+            isLoading = savedInstanceState.getBoolean("isLoading");
+            mList = dataFragment.getMovieDataList();
+            ids = dataFragment.getIdsList();
             mAdapter = new MovieAdapter(c, mList, width, height);
             mGridView.setAdapter(mAdapter);
         }
+        Log.d(LOG_TAG, "onViewCreated isLoading is " + String.valueOf(isLoading));
+
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            Bitmap mBitmap;
+            MovieData movieToPass;
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+                ImageView mThumbnail = (ImageView) view.findViewById(R.id.moviePoster);
+                Drawable mDrawable = mThumbnail.getDrawable();
+
+
+                if (mList != null && mList.size() > 0) {
+                    if (isSearch) {
+                        movieToPass = dataFragment.getMovieDataList().get(i);
+                    } else {
+                        movieToPass = mList.get(i);
+
+                    }
+                    if (mDrawable != null) {
+                        mBitmap = ((BitmapDrawable) mDrawable).getBitmap();
+                        dataFragment.setDetailsData(movieToPass, mBitmap);
+                        mListener.onListItemClick();
+                    } else {
+                        Target target = new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                dataFragment.setDetailsData(movieToPass, bitmap);
+                                mListener.onListItemClick();
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
+
+                            }
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                            }
+                        };
+                        Picasso.with(c).load(getString(R.string.db_poster_path_beginning) + movieToPass.getPosterPath()).into(target);
+                    }
+
+
+                }
+            }
+        });
+
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (mAdapter != null) {
-
                     mAdapter.getFilter().filter(s);
                 }
             }
@@ -225,6 +259,7 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
 
             }
         });
+
         searchEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -233,13 +268,28 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
                     if (hasFocus) {
                         sort.setVisible(false);
                         isLoading = true;
+                        isSearch = true;
                     } else {
+                        isSearch = false;
                         isLoading = false;
                         sort.setVisible(true);
                         InputMethodManager imm = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     }
                 }
+            }
+        });
+        searchEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == event.KEYCODE_BACK) {
+
+                    ((EditText) v).setText("");
+                    searchView.setVisibility(View.GONE);
+
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -255,8 +305,9 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 mLastVisibleItem = firstVisibleItem + visibleItemCount;
-                if (totalItemCount > 0 && !isLoading && mLastVisibleItem == totalItemCount) {
+                if (totalItemCount > 0 && !isLoading && mLastVisibleItem == totalItemCount && totalItemCount == mList.size()) {
                     isLoading = true;
+                    Log.d(LOG_TAG, "onScroll setting isLoading to true");
                     pagesNumber++;
                     isSorting = false;
                     createData(getUrl());
@@ -285,7 +336,7 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
         calendar.add(Calendar.MONTH, -2);
         Date twoMonthAgoDate = calendar.getTime();
         String twoMonthAgo = format.format(twoMonthAgoDate);
-        String url =  new Uri.Builder()
+        String url = new Uri.Builder()
                 .scheme("http")
                 .authority("api.themoviedb.org")
                 .appendPath("3")
@@ -293,13 +344,13 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
                 .appendPath("movie")
                 .appendQueryParameter("primary_release_date.gte", twoMonthAgo)
                 .appendQueryParameter("primary_release_date.lte", todayDate)
-                .appendQueryParameter("certification_country", "US")
+                .appendQueryParameter("language", "en")
                 .appendQueryParameter("sort_by", mPrefs.getString(SORT_KEY, jsonPopularity) + ".desc")
                 .appendQueryParameter("api_key", "e674a7b5d3ff614af0ef26806ce2d17b")
                 .appendQueryParameter("page", String.valueOf(pagesNumber))
                 .build().toString();
 
-        Log.d(LOG_TAG, "getUrl "+ url);
+        Log.d(LOG_TAG, "getUrl " + url);
         return url;
     }
 
@@ -307,6 +358,7 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("pageNumber", pagesNumber);
+        outState.putBoolean("isLoading", isLoading);
     }
 
     @Override
@@ -316,30 +368,79 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
     }
 
     private void createData(String url) {
-        new AsyncTask<String, Void, String>() {
+        new AsyncTask<String, Void, List<MovieData>>() {
             boolean isConnected = false;
 
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                if (!isLoading) {
-                    mProgressBar.setVisibility(View.VISIBLE);
-                } else {
-                    loadingMoreView.setVisibility(View.VISIBLE);
-                }
+                swipeRefreshLayout.setRefreshing(true);
             }
 
             @Override
-            protected String doInBackground(String... params) {
+            protected List<MovieData> doInBackground(String... params) {
                 String jsonString = getRequest(params[0]);
+
+
+                List<MovieData> movieDataList;
+                List<String> idList;
+                Log.d(LOG_TAG, "buildJsonObjectList page number is " + String.valueOf(pagesNumber));
+                if (isSorting) {
+                    movieDataList = new ArrayList<MovieData>();
+                    idList = new ArrayList<String>();
+                    mList.clear();
+                    ids.clear();
+                    Log.d(LOG_TAG, "doInBackground sorting is true");
+                } else {
+                    movieDataList = mList;
+                    idList = ids;
+                    Log.d(LOG_TAG, "doInBackground sorting is false");
+                }
+
+                try {
+                    JSONObject mJsonMain = new JSONObject(jsonString);
+                    JSONArray mainArray = mJsonMain.getJSONArray("results");
+                    for (int i = 0; i < mainArray.length(); i++) {
+
+                        JSONObject current = mainArray.getJSONObject(i);
+                        MovieData movieDataCurrent = new MovieData();
+
+                        movieDataCurrent.setId(current.getString("id"));
+                        movieDataCurrent.setTitle(current.getString("title"));
+                        movieDataCurrent.setDate(current.getString("release_date"));
+                        movieDataCurrent.setSynopsis(current.getString("overview"));
+                        movieDataCurrent.setPosterPath(current.getString("poster_path"));
+                        movieDataCurrent.setVoteAverage(current.getString("vote_average"));
+                        movieDataCurrent.setVoteCount(current.getString("vote_count"));
+
+                        if (!idList.contains(movieDataCurrent.getId())) {
+                            if (!movieDataCurrent.getPosterPath().equals("null") && !movieDataCurrent.getSynopsis().equals("null") && current.getString("original_language").equals("en")) {
+                                movieDataList.add(movieDataCurrent);
+                                idList.add(movieDataCurrent.getId());
+                            }
+
+                        } else {
+                            Log.d(LOG_TAG, "buildJsonObjectList list contains object !!!!!!!");
+                        }
+
+                    }
+
+                } catch (JSONException e) {
+                    Log.e(LOG_TAG, "buildJsonObjectList ", e);
+                } catch (Exception e) {
+                    Log.e(LOG_TAG, "buildJsonObjectList ", e);
+
+                }
+                mList = movieDataList;
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-                return jsonString;
+                return movieDataList;
+
 
             }
 
@@ -401,60 +502,28 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
             }
 
             @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                mProgressBar.setVisibility(View.GONE);
-                loadingMoreView.setVisibility(View.GONE);
+            protected void onPostExecute(List<MovieData> list) {
+                super.onPostExecute(list);
+                swipeRefreshLayout.setRefreshing(false);
                 if (!isConnected) {
                     showDialog("NoConnection");
                 } else {
-                    mAdapter = new MovieAdapter(c, buildJsonObjectList(s), width, height);
-                    mGridView.setAdapter(mAdapter);
-                    if (state != null) {
-                        mGridView.onRestoreInstanceState(state);
+                    state = mGridView.onSaveInstanceState();
+                    if (mAdapter == null || isSorting) {
+                        mAdapter = new MovieAdapter(c, list, width, height);
+                        mGridView.setAdapter(mAdapter);
+                    } else {
+                        mAdapter.notifyDataSetChanged();
+                        if (state != null) {
+                            mGridView.onRestoreInstanceState(state);
+                        }
+
                     }
+
                     isLoading = false;
                 }
 
 
-            }
-
-            private List<JSONObject> buildJsonObjectList(String jsonString) {
-                List<JSONObject> jsonList;
-                Log.d(LOG_TAG, "buildJsonObjectList page number is " + String.valueOf(pagesNumber));
-                if (isSorting) {
-                    jsonList = new ArrayList<JSONObject>();
-                } else {
-                    jsonList = mList;
-                    state = mGridView.onSaveInstanceState();
-                }
-
-                try {
-                    JSONObject mJsonMain = new JSONObject(jsonString);
-                    JSONArray mainArray = mJsonMain.getJSONArray("results");
-                    for (int i = 0; i < mainArray.length(); i++) {
-                        JSONObject current = mainArray.getJSONObject(i);
-
-                            if (!jsonList.contains(current)) {
-                                if (!current.getString("poster_path").equals("null") && !current.getString("overview").equals("null") && current.getString("original_language").equals("en")) {
-                                    jsonList.add(current);
-                                }
-
-                            }else{
-                                Log.d(LOG_TAG, "buildJsonObjectList list contains object !!!!!!!");
-                            }
-
-                    }
-
-                } catch (JSONException e) {
-                    Log.e(LOG_TAG, "buildJsonObjectList ", e);
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, "buildJsonObjectList ", e);
-
-                }
-                mList = jsonList;
-
-                return jsonList;
             }
 
             private void showDialog(String param) {
@@ -468,7 +537,6 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
 
             @Override
             protected void onCancelled() {
-                mProgressBar.setVisibility(View.GONE);
                 super.onCancelled();
             }
 
@@ -484,44 +552,13 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
         }.execute(url);
     }
 
-//    public void sortList(final String jsonParam) {
-//        Log.d(LOG_TAG, "sortList is called");
-//        Collections.sort(mList, new Comparator<JSONObject>() {
-//            int sortBy;
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//
-//
-//            @Override
-//            public int compare(JSONObject lhs, JSONObject rhs) {
-//                try {
-//                    if (!jsonParam.equals("release_date")) {
-//
-//                        sortBy = Double.compare(Double.parseDouble(lhs.getString(jsonParam)), Double.parseDouble(rhs.getString(jsonParam)));
-//
-//                    } else {
-//
-//                        sortBy = dateFormat.parse(lhs.getString(jsonParam)).compareTo(dateFormat.parse(rhs.getString(jsonParam)));
-//
-//
-//                    }
-//
-//                } catch (ParseException e) {
-//                    Log.d(LOG_TAG, "compare parse exception", e);
-//                    e.printStackTrace();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                    Log.d(LOG_TAG, "compare json exception", e);
-//                }
-//                return sortBy;
-//            }
-//        });
-//        Collections.reverse(mList);
-//    }
 
     @Override
     public void onPause() {
         state = mGridView.onSaveInstanceState();
-        dataFragment.setJsonData(mList);
+        dataFragment.setMovieData(mList);
+        dataFragment.setIdsData(ids);
+        dataFragment.setSearchBoolean(isSearch);
         mPrefs.unregisterOnSharedPreferenceChangeListener(this);
         super.onPause();
     }
@@ -545,7 +582,6 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
 
 
     }
-
 
 
 }

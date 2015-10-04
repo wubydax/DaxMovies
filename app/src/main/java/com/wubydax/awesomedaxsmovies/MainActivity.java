@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem share = menu.findItem(R.id.share);
+        share.setVisible(false);
 
 
         return true;

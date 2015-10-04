@@ -2,10 +2,12 @@ package com.wubydax.awesomedaxsmovies;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -27,7 +29,7 @@ import org.json.JSONObject;
  */
 public class DetailsFragment extends Fragment {
     private Bitmap mBg;
-    private JSONObject jsonObject;
+    private MovieData movieData;
     private Context c;
     private String LOG_TAG = "DetailsFragment";
     private int width, height;
@@ -51,6 +53,8 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem sort = menu.findItem(R.id.action_sort);
+        MenuItem share = menu.findItem(R.id.share);
+        share.setVisible(true);
         sort.setVisible(false);
         getActivity().invalidateOptionsMenu();
         super.onCreateOptionsMenu(menu, inflater);
@@ -59,9 +63,24 @@ public class DetailsFragment extends Fragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.share:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, String.format(getString(R.string.share_intent_string), movieData.getTitle(), getIntentString()));
+                startActivity(Intent.createChooser(intent, "Share this movie"));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
-        dataFragment.setDetailsData(jsonObject, mBg);
+        dataFragment.setDetailsData(movieData, mBg);
+
     }
 
     @Override
@@ -72,7 +91,7 @@ public class DetailsFragment extends Fragment {
         width = Math.round(getResources().getDimension(R.dimen.blured_image_width));
         height = Math.round(getResources().getDimension(R.dimen.blured_image_height));
         dataFragment = (DataFragment) getFragmentManager().findFragmentByTag("data");
-        jsonObject = dataFragment.getJson();
+        movieData = dataFragment.getMovieData();
         mBg = dataFragment.getBitmap();
 
         View rootView = inflater.inflate(R.layout.fragment_details, container, false);
@@ -84,20 +103,17 @@ public class DetailsFragment extends Fragment {
         ImageView mRatingStars = (ImageView) rootView.findViewById(R.id.ratingImage);
         mPosterView.setImageBitmap(mBg);
 
-        try {
-            mTitle = jsonObject.getString(c.getString(R.string.json_title));
-            mDate = jsonObject.getString(c.getString(R.string.json_release_date));
-            mRating = jsonObject.getString(c.getString(R.string.json_vote_average));
-            mSynopsis = jsonObject.getString(c.getString(R.string.json_synopsis));
+            mTitle = movieData.getTitle();
+            mDate = movieData.getDate();
+            mRating = movieData.getVoteAverage();
+            mSynopsis = movieData.getSynopsis();
             mRatingDouble = Double.parseDouble(mRating);
             mTitleText.setText(mTitle);
             mDateText.setText(String.format(getString(R.string.details_release_date), mDate));
             mRatingText.setText(String.format(getString(R.string.details_rating), mRating));
             mSynopsisText.setText(mSynopsis);
             mRatingStars.setImageDrawable(utils.getRatingImage(mRatingDouble));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
 
         Bitmap bitmap = utils.blurBitmap(mBg, mBg.getWidth(), mBg.getHeight());
         Bitmap twice = utils.blurBitmap(bitmap, mBg.getWidth(), mBg.getHeight());
@@ -115,20 +131,35 @@ public class DetailsFragment extends Fragment {
             rootView.setBackgroundDrawable(bgLandscape);
         }
 
-        int colorPrimary = utils.getColor(mBg);
-        int colorPrimaryDark = utils.darkenColor(colorPrimary);
 
-        mListener.onFragmentCall(mTitle, colorPrimary, colorPrimaryDark);
 
         return rootView;
     }
 
+    private String getIntentString(){
+
+        return new Uri.Builder()
+                .scheme("https")
+                .authority("www.themoviedb.org")
+                .appendPath("movie")
+                .appendPath(movieData.getId()).build().toString();
+    }
+
+    @Override
+    public void onResume() {
+        int colorPrimary = utils.getColor(mBg);
+        int colorPrimaryDark = utils.darkenColor(colorPrimary);
+
+        mListener.onFragmentCall(mTitle, colorPrimary, colorPrimaryDark);
+        super.onResume();
+    }
 
     @Override
     public void onStop() {
         super.onStop();
         mListener.onFragmentCall(getString(R.string.app_name), getResources().getColor(R.color.primary), getResources().getColor(R.color.primary_dark));
     }
+
 
 
     @Override
