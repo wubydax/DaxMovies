@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import java.util.Arrays;
 
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
     FragmentTransaction ft;
     SharedPreferences sp;
     SharedPreferences.Editor ed;
+    MenuItem search;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem share = menu.findItem(R.id.share);
+        search = menu.findItem(R.id.search);
         share.setVisible(false);
 
 
@@ -91,7 +95,11 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        SearchView searchView = (SearchView) search.getActionView();
+        if (searchView.isShown() && searchView.getQuery().length() > 0 || searchView.hasFocus()) {
+            searchView.onActionViewCollapsed();
+            searchView.setQuery("", false);
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
 
             getSupportFragmentManager().popBackStack();
 

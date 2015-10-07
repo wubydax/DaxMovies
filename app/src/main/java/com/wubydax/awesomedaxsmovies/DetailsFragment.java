@@ -20,16 +20,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DetailsFragment extends Fragment {
     private Bitmap mBg;
-    private MovieData movieData;
+    private Results movieData;
     private Context c;
     private String LOG_TAG = "DetailsFragment";
     private int width, height;
@@ -54,8 +51,10 @@ public class DetailsFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem sort = menu.findItem(R.id.action_sort);
         MenuItem share = menu.findItem(R.id.share);
+        MenuItem search = menu.findItem(R.id.search);
         share.setVisible(true);
         sort.setVisible(false);
+        search.setVisible(false);
         getActivity().invalidateOptionsMenu();
         super.onCreateOptionsMenu(menu, inflater);
 
@@ -104,9 +103,9 @@ public class DetailsFragment extends Fragment {
         mPosterView.setImageBitmap(mBg);
 
             mTitle = movieData.getTitle();
-            mDate = movieData.getDate();
-            mRating = movieData.getVoteAverage();
-            mSynopsis = movieData.getSynopsis();
+            mDate = movieData.getReleaseDate();
+            mRating = String.valueOf(movieData.getVoteAverage());
+            mSynopsis = movieData.getOverview();
             mRatingDouble = Double.parseDouble(mRating);
             mTitleText.setText(mTitle);
             mDateText.setText(String.format(getString(R.string.details_release_date), mDate));
@@ -142,7 +141,7 @@ public class DetailsFragment extends Fragment {
                 .scheme("https")
                 .authority("www.themoviedb.org")
                 .appendPath("movie")
-                .appendPath(movieData.getId()).build().toString();
+                .appendPath(String.valueOf(movieData.getId())).build().toString();
     }
 
     @Override

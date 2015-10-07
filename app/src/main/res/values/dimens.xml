@@ -15,5 +15,6 @@
     <dimen name="details_fragment_textview_margin_vertical">10dp</dimen>
     <dimen name="rating_image_width">116dp</dimen>
     <dimen name="rating_image_height">48dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

@@ -39,5 +39,6 @@
 
     <string name="share_intent_string">Hi! I found this movie called \"%1$s\" and it looks really nice. Check it out \n%2$s</string>
     <string name="action_settings">Settings</string>
+    <string name="search_hint">Movie title</string>
 
 </resources>

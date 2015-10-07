@@ -6,41 +6,17 @@
     android:padding="@dimen/grid_spacing"
     tools:context=".MainActivityFragment">
 
-    <LinearLayout
-        android:id="@+id/searchContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/searchIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:src="@drawable/ic_search" />
-
-        <EditText
-            android:id="@+id/searchEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/searchContainer">
+        >
 
         <GridView
             android:id="@+id/movieGridView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/searchContainer"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:horizontalSpacing="@dimen/grid_spacing"
