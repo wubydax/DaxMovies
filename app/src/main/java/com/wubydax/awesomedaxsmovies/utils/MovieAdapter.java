@@ -1,4 +1,4 @@
-package com.wubydax.awesomedaxsmovies;
+package com.wubydax.awesomedaxsmovies.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.wubydax.awesomedaxsmovies.R;
+import com.wubydax.awesomedaxsmovies.api.JsonResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.List;
  * Created by Anna Berkovitch on 21/09/2015.
  */
 public class MovieAdapter extends BaseAdapter {
-    List<Results> mList;
+    List<JsonResponse.Results> mList;
     Context c;
     String LOG_TAG;
     int width, height;
@@ -28,7 +30,7 @@ public class MovieAdapter extends BaseAdapter {
     List<Bitmap> bitmapList;
     DataFragment dataFragment;
 
-    public MovieAdapter(Context context, List<Results> jsonObjectList, int imageWidth, int imageHeight) {
+    public MovieAdapter(Context context, List<JsonResponse.Results> jsonObjectList, int imageWidth, int imageHeight) {
         c = context;
         mList = jsonObjectList;
         LOG_TAG = "MovieAdapter";

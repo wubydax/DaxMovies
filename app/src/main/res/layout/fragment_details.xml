@@ -69,12 +69,25 @@
                     android:layout_toRightOf="@id/detailPoster" />
 
                 <TextView
-                    android:id="@+id/detailSynopsis"
+                    android:id="@+id/detailGenreText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/detailPoster"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:text="@string/details_genre"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/detailSynopsis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/detailGenreText"
+                    android:text="Synopsis"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/white"
                     android:textSize="16dp" />

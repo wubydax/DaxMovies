@@ -1,4 +1,4 @@
-package com.wubydax.awesomedaxsmovies;
+package com.wubydax.awesomedaxsmovies.utils;
 
 
 import android.app.AlertDialog;
@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+
+import com.wubydax.awesomedaxsmovies.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,12 +49,7 @@ public class MyDialogFragment extends DialogFragment {
     private void buildDialog(String title, String message){
         mBuilder.setTitle(title)
                 .setMessage(message)
-                .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getActivity().finish();
-                    }
-                });
+                .setNegativeButton(android.R.string.ok, null);
     }
 
 }

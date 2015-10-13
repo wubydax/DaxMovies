@@ -73,12 +73,23 @@
                     android:src="@drawable/rating_5"/>
 
                 <TextView
+                    android:id="@+id/detailGenreText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/detailPoster"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:text="@string/details_genre"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/white" />
+
+                <TextView
                     android:id="@+id/detailSynopsis"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_below="@+id/detailPoster"
+                    android:layout_below="@+id/detailGenreText"
                     android:text="Small Text"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/white"

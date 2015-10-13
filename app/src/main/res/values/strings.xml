@@ -4,41 +4,41 @@
 
     <!-- Strings for various dialogs -->
     <string name="device_offline_title">Device Offline</string>
-    <string name="device_offline_message">Seems like there was a problem connecting to the internet. Please check your internet connection and try again.</string>
-    <string name="no_data_message">There seems to be an error loading the data from the server.\n\nYour device seems to be connected to the internet, but the connection might be too slow or faulty.\n\nIf the error persist and you have no issues connecting to the internet otherwise, please contact us through our comment section on Google Play.</string>
+    <string name="device_offline_message">Seems like there was a problem connecting to the internet. Please check your internet connection and click refresh button or launch the application again.</string>
+    <string name="no_data_message">There seems to be an error loading the data from the server.\n\nYour device seems to be connected to the internet, but the connection might be too slow or faulty. Please, try refreshing or relaunching the app.\n\nIf the error persist and you have no issues connecting to the internet otherwise, please contact us through our comment section on Google Play.</string>
     <string name="no_data_title">Error Loading Data</string>
-    <string name="sort_dialog_title">Sort movies by</string>
+    <string name="sort_dialog_title">Show me</string>
     <string-array name="dialog_sort_options">
-        <item>Popularity (default)</item>
-        <item>Rating</item>
-        <item>Release Date</item>
+        <item>Most popular movies</item>
+        <item>Top rated movies</item>
+        <item>Now in theatres</item>
+        <item>Coming soon</item>
     </string-array>
-    <string-array name="dialog_sort_values">
-        <item>@string/json_popularity</item>
-        <item>@string/json_vote_average</item>
-        <item>@string/json_release_date</item>
+    <string-array name="dialog_sort_values" translatable = "false">
+        <item>popular</item>
+        <item>top_rated</item>
+        <item>now_playing</item>
+        <item>upcoming</item>
     </string-array>
 
     <!--Json parsing and retrieving related strings -->
-    <string name="json_title" translatable = "false">title</string>
-    <string name="json_poster_path_segment" translatable = "false">poster_path</string>
-    <string name="json_release_date" translatable = "false">release_date</string>
-    <string name="json_vote_average" translatable = "false">vote_average</string>
-    <string name="json_synopsis" translatable = "false">overview</string>
-    <string name="json_popularity" translatable = "false">popularity</string>
     <string name="db_poster_path_beginning" translatable = "false">http://image.tmdb.org/t/p/w185</string>
-    <string name="db_request_popularity" translatable = "false"><![CDATA[http://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2015-07-26&primary_release_date.lte=2015-09-26&certification_country=US&sort_by=popularity.desc&api_key=e674a7b5d3ff614af0ef26806ce2d17b&page=]]></string>
 
     <!--Menu strings -->
-    <string name="menu_action_sort">SORT</string>
+    <string name="menu_sort">Sort</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_settings">Settings</string>
+    <string name="search_hint">Movie title</string>
+
 
     <!--Details fragment text views strings -->
     <string name="details_rating">Viewer rating: %1$s</string>
     <string name="details_release_date">Released: %1$s</string>
-    <string name="title_activity_welcome">WelcomeActivity</string>
-
+    <string name="title_activity_welcome" translatable="false">WelcomeActivity</string>
     <string name="share_intent_string">Hi! I found this movie called \"%1$s\" and it looks really nice. Check it out \n%2$s</string>
-    <string name="action_settings">Settings</string>
-    <string name="search_hint">Movie title</string>
+    <string name="details_genre">Genre: </string>
+
 
 </resources>

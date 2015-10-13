@@ -4,24 +4,32 @@
 
     <!-- Strings for various dialogs -->
     <string name="device_offline_title">Аппарат в оффлайновом режиме</string>
-    <string name="device_offline_message">Похоже, есть проблема с подключением к Интернету. Пожалуйста, проверьте ваше интернет-соединение и попробуйте снова.</string>
-    <string name="no_data_message">Произошла неувязка при загрузке данных с сервера.\n\nПохоже, что ваше устройство подключено к сети, но соединение слишком медленное или неисправное.\n\nЕсли проблема на разрешится, и у вас нет проблем с подключением к Интернету в других приложениях, пожалуйста, свяжитесь с нами через раздел комментариев на Google Play.</string>
+    <string name="device_offline_message">Похоже, есть проблема с подключением к Интернету. Пожалуйста, проверьте ваше интернет-соединение и нажмите на кнопку обновления или перезагрузите приложение.</string>
+    <string name="no_data_message">Произошла неувязка при загрузке данных с сервера.\n\nПохоже, что ваше устройство подключено к сети, но соединение слишком медленное или неисправное. Пожалуйста, попробуйте перезагрузить данные с помощью кнопки обновления или же откройте приложение заново.\n\nЕсли проблема на разрешится, и у вас нет проблем с подключением к Интернету в других приложениях, пожалуйста, свяжитесь с нами через раздел комментариев на Google Play.</string>
     <string name="no_data_title">Ошибка при загрузке данных</string>
-    <string name="sort_dialog_title">Сортировка списка по</string>
+    <string name="sort_dialog_title">Показать</string>
     <string-array name="dialog_sort_options">
-        <item>Популярности фильма (по умолчанию)</item>
-        <item>Рейтингу зрителей</item>
-        <item>Дате примьеры</item>
+        <item>Самые порулярные фильмы</item>
+        <item>Фильмы высоким рейтингом</item>
+        <item>Сейчас в кинотеатрах</item>
+        <item>Скоро на экранах</item>
     </string-array>
 
 
     <!--Menu strings -->
-    <string name="menu_action_sort">Сортировка</string>
+    <string name="menu_sort">Сортировка</string>
+    <string name="search_hint">Название фильма</string>
+    <string name="menu_share">Поделиться</string>
+    <string name="menu_search">Поиск</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_refresh">Обновить</string>
 
     <!--Details fragment text views strings -->
     <string name="details_rating">Рейтинг зрителей: %1$s</string>
     <string name="details_release_date">Дата примьеры: %1$s</string>
     <string name="share_intent_string">Привет! Тут киношка, называется \"%1$s\". По-моему не плохой фильм. Вот ссылка \n%2$s</string>
+    <string name="details_genre">Жанр:</string>
+
 
 
 </resources>

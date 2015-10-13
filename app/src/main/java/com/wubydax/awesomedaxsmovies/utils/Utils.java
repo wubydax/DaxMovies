@@ -1,4 +1,4 @@
-package com.wubydax.awesomedaxsmovies;
+package com.wubydax.awesomedaxsmovies.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
+
+import com.wubydax.awesomedaxsmovies.R;
 
 /**
  * Created by dax on 24/09/15.
@@ -21,9 +23,9 @@ public class Utils {
 
     public int getColor(Bitmap bitmap){
         Palette palette = Palette.generate(bitmap);
-        int mainColor = palette.getVibrantColor(0);
+        int mainColor = palette.getDarkVibrantColor(palette.getMutedColor(0));
         if(mainColor == 0 || isBrightColor(mainColor)){
-            mainColor = palette.getDarkVibrantColor(palette.getMutedColor(0));
+            mainColor = palette.getDarkMutedColor(context.getResources().getColor(R.color.primary));
         }
         return mainColor;
     }

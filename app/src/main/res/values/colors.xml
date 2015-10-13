@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="semi_transparent_black">#77000000</color>
+    <color name="semi_transparent_black">#9f000000</color>
     <color name="transparent_black">#00000000</color>
     <color name="primary">#903838</color>
     <color name="primary_dark">#732C2C</color>

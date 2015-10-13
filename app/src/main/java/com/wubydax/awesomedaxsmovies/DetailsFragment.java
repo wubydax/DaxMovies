@@ -10,6 +10,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,13 +22,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.wubydax.awesomedaxsmovies.api.JsonResponse;
+import com.wubydax.awesomedaxsmovies.utils.DataFragment;
+import com.wubydax.awesomedaxsmovies.utils.FragmentCallbackListener;
+import com.wubydax.awesomedaxsmovies.utils.Utils;
+
+import java.util.HashMap;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DetailsFragment extends Fragment {
     private Bitmap mBg;
-    private Results movieData;
+    private JsonResponse.Results movieData;
     private Context c;
     private String LOG_TAG = "DetailsFragment";
     private int width, height;
@@ -34,6 +44,8 @@ public class DetailsFragment extends Fragment {
     private String mTitle, mDate, mRating, mSynopsis;
     private double mRatingDouble;
     private DataFragment dataFragment;
+    private HashMap<Integer, String> genreHashMap;
+    private List<Integer> genreIdList;
     Utils utils;
 
 
@@ -52,9 +64,11 @@ public class DetailsFragment extends Fragment {
         MenuItem sort = menu.findItem(R.id.action_sort);
         MenuItem share = menu.findItem(R.id.share);
         MenuItem search = menu.findItem(R.id.search);
+        MenuItem refresh = menu.findItem(R.id.refresh);
         share.setVisible(true);
         sort.setVisible(false);
         search.setVisible(false);
+        refresh.setVisible(false);
         getActivity().invalidateOptionsMenu();
         super.onCreateOptionsMenu(menu, inflater);
 
@@ -64,7 +78,7 @@ public class DetailsFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.share:
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
@@ -92,26 +106,30 @@ public class DetailsFragment extends Fragment {
         dataFragment = (DataFragment) getFragmentManager().findFragmentByTag("data");
         movieData = dataFragment.getMovieData();
         mBg = dataFragment.getBitmap();
+        genreHashMap = dataFragment.getHashMapGenres();
 
         View rootView = inflater.inflate(R.layout.fragment_details, container, false);
         TextView mTitleText = (TextView) rootView.findViewById(R.id.detailTitle);
         TextView mDateText = (TextView) rootView.findViewById(R.id.detailDate);
         TextView mRatingText = (TextView) rootView.findViewById(R.id.detailRating);
         TextView mSynopsisText = (TextView) rootView.findViewById(R.id.detailSynopsis);
+        TextView mGenreText = (TextView) rootView.findViewById(R.id.detailGenreText);
         ImageView mPosterView = (ImageView) rootView.findViewById(R.id.detailPoster);
         ImageView mRatingStars = (ImageView) rootView.findViewById(R.id.ratingImage);
         mPosterView.setImageBitmap(mBg);
 
-            mTitle = movieData.getTitle();
-            mDate = movieData.getReleaseDate();
-            mRating = String.valueOf(movieData.getVoteAverage());
-            mSynopsis = movieData.getOverview();
-            mRatingDouble = Double.parseDouble(mRating);
-            mTitleText.setText(mTitle);
-            mDateText.setText(String.format(getString(R.string.details_release_date), mDate));
-            mRatingText.setText(String.format(getString(R.string.details_rating), mRating));
-            mSynopsisText.setText(mSynopsis);
-            mRatingStars.setImageDrawable(utils.getRatingImage(mRatingDouble));
+        mTitle = movieData.getTitle();
+        mDate = movieData.getReleaseDate();
+        mRating = String.valueOf(movieData.getVoteAverage());
+        mSynopsis = movieData.getOverview();
+        genreIdList = movieData.getGenreIds();
+        mRatingDouble = Double.parseDouble(mRating);
+        mTitleText.setText(Html.fromHtml("<b>" + mTitle + "</b>"));
+        mDateText.setText(String.format(getString(R.string.details_release_date), mDate));
+        mRatingText.setText(String.format(getString(R.string.details_rating), mRating));
+        mGenreText.setText(Html.fromHtml("<b>" + getString(R.string.details_genre) + "</b>" + " " + "<i>" + genreString(genreIdList) + "</i>"));
+        mSynopsisText.setText(mSynopsis);
+        mRatingStars.setImageDrawable(utils.getRatingImage(mRatingDouble));
 
 
         Bitmap bitmap = utils.blurBitmap(mBg, mBg.getWidth(), mBg.getHeight());
@@ -131,11 +149,10 @@ public class DetailsFragment extends Fragment {
         }
 
 
-
         return rootView;
     }
 
-    private String getIntentString(){
+    private String getIntentString() {
 
         return new Uri.Builder()
                 .scheme("https")
@@ -144,21 +161,41 @@ public class DetailsFragment extends Fragment {
                 .appendPath(String.valueOf(movieData.getId())).build().toString();
     }
 
+    private String genreString(List<Integer> genreIdList) {
+        StringBuilder sb = new StringBuilder();
+        if (genreIdList != null) {
+            if (genreIdList.size() > 0) {
+                for (int i = 0; i < genreIdList.size(); i++) {
+                    sb.append(genreHashMap.get(genreIdList.get(i)));
+                    if (i < genreIdList.size() - 1) {
+                        sb.append(", ");
+                    }
+                }
+
+            } else {
+                sb.append("Not Specified");
+            }
+        } else {
+            sb.append("Not Available");
+        }
+
+        return sb.toString();
+    }
+
     @Override
     public void onResume() {
         int colorPrimary = utils.getColor(mBg);
         int colorPrimaryDark = utils.darkenColor(colorPrimary);
 
-        mListener.onFragmentCall(mTitle, colorPrimary, colorPrimaryDark);
+        mListener.onFragmentCall(mTitle, colorPrimary, colorPrimaryDark, true);
         super.onResume();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mListener.onFragmentCall(getString(R.string.app_name), getResources().getColor(R.color.primary), getResources().getColor(R.color.primary_dark));
+        mListener.onFragmentCall(getString(R.string.app_name), getResources().getColor(R.color.primary), getResources().getColor(R.color.primary_dark), false);
     }
-
 
 
     @Override

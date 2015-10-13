@@ -4,7 +4,7 @@
     tools:context=".MainActivity"
     >
     <item android:id="@+id/search"
-        android:title="search"
+        android:title="@string/menu_search"
         android:icon="@drawable/ic_search"
         app:showAsAction="always"
 
@@ -13,14 +13,20 @@
 
     <item
         android:id="@+id/action_sort"
-        android:title="@string/menu_action_sort"
+        android:title="@string/menu_sort"
         app:showAsAction="always"
         android:icon="@drawable/ic_action_sort"/>
 
     <item
         android:id="@+id/share"
-        android:title="share"
+        android:title="@string/menu_share"
         android:icon="@drawable/ic_action_share"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/refresh"
+        android:title="@string/menu_refresh"
+        android:icon="@drawable/ic_action_refresh"
         app:showAsAction="always"/>
 
 

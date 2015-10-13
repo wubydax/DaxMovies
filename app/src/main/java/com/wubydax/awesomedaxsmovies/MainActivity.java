@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
 
+import com.wubydax.awesomedaxsmovies.utils.FragmentCallbackListener;
+
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements FragmentCallbackListener, FragmentManager.OnBackStackChangedListener {
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
         }
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         ed = sp.edit();
+        updateTitleBySort();
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
 
@@ -53,44 +56,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
         search = menu.findItem(R.id.search);
         share.setVisible(false);
 
-
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        switch (id) {
-
-            case (R.id.action_sort):
-                Dialog mDialog = new AlertDialog.Builder(this)
-                        .setTitle(R.string.sort_dialog_title)
-                        .setSingleChoiceItems(getResources().getStringArray(R.array.dialog_sort_options), Arrays.asList(getResources().getStringArray(R.array.dialog_sort_values)).indexOf(sp.getString("sort_by", "popularity")), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                int selectedItem = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                                ed.putString("sort_by", getResources().getStringArray(R.array.dialog_sort_values)[selectedItem]).apply();
-
-                            }
-                        })
-                        .setCancelable(true)
-                        .create();
-                mDialog.show();
-                break;
-
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -111,8 +77,12 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
 
 
     @Override
-    public void onFragmentCall(String title, int colorPrimary, int colorPrimaryDark) {
-        setTitle(title);
+    public void onFragmentCall(String title, int colorPrimary, int colorPrimaryDark, boolean isDetails) {
+        if(isDetails) {
+            setTitle(title);
+        }else{
+            updateTitleBySort();
+        }
         ColorDrawable colorDrawable = new ColorDrawable(colorPrimary);
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
         if (Build.VERSION.SDK_INT >= 21) {
@@ -129,6 +99,14 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
         ft.commit();
 
 
+    }
+
+    @Override
+    public void updateTitleBySort() {
+        String sortValue = sp.getString("sort_by", "popular");
+        int index = Arrays.asList(getResources().getStringArray(R.array.dialog_sort_values)).indexOf(sortValue);
+        String title = getResources().getStringArray(R.array.dialog_sort_options)[index];
+        setTitle(title);
     }
 
     @Override

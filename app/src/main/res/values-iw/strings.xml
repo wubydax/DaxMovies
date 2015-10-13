@@ -4,24 +4,33 @@
 
     <!-- Strings for various dialogs -->
     <string name="device_offline_title">מצב לא מכוון</string>
-    <string name="device_offline_message">נראה כי היתה בעיה להתחבר לאינטרנט. אנא בדוק את מצב החיבור של מכשירך לאינטרנט ונסה לפתוח את היישום שנית.</string>
-    <string name="no_data_message">נראה כי אירעה שגיאה בטעינת נתונים מהרשת.\n\מכשירך אומנם מחובר לאינטרנט, אך ייתכן והחיבור איטי או לא תקין.\n\nבמקרה של תקלה נשנית או במידה ואין בעיה לגלוש באינטרנט ביישומים אחרים, אנא צרו איתנו קשר באמצעות Google Play.</string>
+    <string name="device_offline_message">נראה כי היתה בעיה להתחבר לאינטרנט. אנא בדוק את מצב החיבור של מכשירך לאינטרנט ונסה ללחוץ על כפתור רענון או לפתוח את היישום מחדש.</string>
+    <string name="no_data_message">נראה כי אירעה שגיאה בטעינת נתונים מהרשת.\n\מכשירך אומנם מחובר לאינטרנט, אך ייתכן והחיבור איטי או לא תקין. אנא נסה ללחוץ על כפתור רענון או לפתוח את היישום מחדש.\n\nבמקרה של תקלה נשנית או במידה ואין בעיה לגלוש באינטרנט ביישומים אחרים, אנא צרו איתנו קשר באמצעות Google Play.</string>
     <string name="no_data_title">שגיאה בטעינת נתונים</string>
-    <string name="sort_dialog_title">מיין סרטים לפי</string>
+    <string name="sort_dialog_title">הצג סרטים</string>
     <string-array name="dialog_sort_options">
-        <item>פופולריות (ברירת מחדל)</item>
-        <item>דירוג צופים</item>
-        <item>תאריך בכורה</item>
+        <item>הכי פופולריים</item>
+        <item>מדורגים הכי גבוה</item>
+        <item>עכשיו בבתי קולנוע</item>
+        <item>בקרוב</item>
     </string-array>
 
 
     <!--Menu strings -->
-    <string name="menu_action_sort">מיין</string>
+    <string name="menu_sort">מיין</string>
+    <string name="menu_share">שתף</string>
+    <string name="menu_search">חיפוש</string>
+    <string name="menu_settings">הגדרות</string>
+    <string name="menu_refresh">רענון</string>
+    <string name="search_hint">כותרת הסרט</string>
+
 
     <!--Details fragment text views strings -->
     <string name="details_rating">דירוג הצופים: %1$s</string>
     <string name="details_release_date">תאריך בכורה: %1$s</string>
     <string name="share_intent_string">הי! מצאתי סרט שנקרא \"%1$s\" וזה נראה נחמד. הנה הקישור \n%2$s</string>
+    <string name="details_genre">ז\'אנר:</string>
+
 
 
 </resources>
