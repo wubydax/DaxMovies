@@ -22,10 +22,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|center"
             android:layout_marginLeft="@dimen/grid_spacing"
-            android:maxLines="2"
+            android:maxLines="@integer/max_line_number_title"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/white"
-            android:textSize="12dp" />
+            android:textSize="@dimen/grid_title_text_size" />
     </FrameLayout>
 
 </FrameLayout>

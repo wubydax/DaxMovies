@@ -2,4 +2,5 @@
 <resources>
     <integer name="columns_num_portrait">3</integer>
     <integer name="columns_num_landscape">5</integer>
+    <integer name="max_line_number_title">2</integer>
 </resources>
