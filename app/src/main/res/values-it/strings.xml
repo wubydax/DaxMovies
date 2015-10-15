@@ -4,8 +4,8 @@
 
     <!-- Strings for various dialogs -->
     <string name="device_offline_title">Dispositivo non connesso</string>
-    <string name="device_offline_message">Sembra ci sia un problema nella connessione ad internet. Per favore controlla la connessione e clicca il bottone aggiorna o chiudi e riapri l' app.</string>
-    <string name="no_data_message">Sembra ci sia un problema nel caricare il database dal server.\n\nIl dispositivo sembra essere connesso ad internet ma la connessione potrebbe essere troppo lenta o difettosa. Riprova aggiornando la pagina o riavviando l' applicazione.\n\nSe il problema dovesse persistere e non aveste problemi nella connessione ad internet per altre funzioni, per favore contattateci attraverso i commenti dal Google Play.</string>
+    <string name="device_offline_message">Sembra ci sia un problema nella connessione ad internet. Per favore controlla la connessione e clicca il bottone aggiorna o chiudi e riapri l\' app.</string>
+    <string name="no_data_message">Sembra ci sia un problema nel caricare il database dal server.\n\nIl dispositivo sembra essere connesso ad internet ma la connessione potrebbe essere troppo lenta o difettosa. Riprova aggiornando la pagina o riavviando l\' applicazione.\n\nSe il problema dovesse persistere e non aveste problemi nella connessione ad internet per altre funzioni, per favore contattateci attraverso i commenti dal Google Play.</string>
     <string name="no_data_title">Errore nel caricamento dati</string>
     <string name="sort_dialog_title">Mostra</string>
     <string-array name="dialog_sort_options">
@@ -27,7 +27,7 @@
     <!--Details fragment text views strings -->
     <string name="details_rating">Valutazione del pubblico: %1$s</string>
     <string name="details_release_date">Data di uscita: %1$s</string>
-    <string name="share_intent_string">Ciao! ho trovato questo film: \"%1$s\" e sembra molto bello. Dagli un' occhiata\n%2$s</string>
+    <string name="share_intent_string">Ciao! ho trovato questo film: \"%1$s\" e sembra molto bello. Dagli un\' occhiata\n%2$s</string>
     <string name="intent_picker_title">Condividi questo film</string>
     <string name="details_genre">Genere: </string>
 

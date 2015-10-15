@@ -4,98 +4,88 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/dimmedView"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:background="@color/semi_transparent_black"
         android:padding="@dimen/activity_horizontal_margin">
 
-        <ScrollView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/detailPoster"
+                android:layout_width="@dimen/detail_poster_width"
+                android:layout_height="@dimen/detail_poster_height"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:background="@drawable/poster_bg_stroke" />
 
-                <ImageView
-                    android:id="@+id/detailPoster"
-                    android:layout_width="@dimen/detail_poster_width"
-                    android:layout_height="@dimen/detail_poster_height"
-                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:background="@drawable/poster_bg_stroke" />
+            <TextView
+                android:id="@+id/detailTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/detailPoster"
+                android:layout_toRightOf="@+id/detailPoster"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/title_text_size" />
 
-                <TextView
-                    android:id="@+id/detailTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/detailPoster"
-                    android:layout_toRightOf="@+id/detailPoster"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/detailDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/detailRating"
+                android:layout_alignLeft="@+id/detailTitle"
+                android:layout_alignStart="@+id/detailTitle"
+                android:layout_marginBottom="@dimen/details_fragment_textview_margin_vertical"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
 
-                <TextView
-                    android:id="@+id/detailDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/detailRating"
-                    android:layout_alignLeft="@+id/detailTitle"
-                    android:layout_alignStart="@+id/detailTitle"
-                    android:layout_marginBottom="@dimen/details_fragment_textview_margin_vertical"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/detailRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/ratingImage"
+                android:layout_alignLeft="@+id/detailDate"
+                android:layout_alignStart="@+id/detailDate"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
 
-                <TextView
-                    android:id="@+id/detailRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/ratingImage"
-                    android:layout_alignLeft="@+id/detailDate"
-                    android:layout_alignStart="@+id/detailDate"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/white" />
+            <ImageView
+                android:id="@+id/ratingImage"
+                android:layout_width="@dimen/rating_image_width"
+                android:layout_height="@dimen/rating_image_height"
+                android:layout_alignBottom="@+id/detailPoster"
+                android:layout_toEndOf="@+id/detailPoster"
+                android:layout_toRightOf="@id/detailPoster" />
 
-                <ImageView
-                    android:id="@+id/ratingImage"
-                    android:layout_width="@dimen/rating_image_width"
-                    android:layout_height="@dimen/rating_image_height"
-                    android:layout_alignBottom="@+id/detailPoster"
-                    android:layout_toEndOf="@+id/detailPoster"
-                    android:layout_toRightOf="@id/detailPoster" />
+            <TextView
+                android:id="@+id/detailGenreText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/detailPoster"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
 
-                <TextView
-                    android:id="@+id/detailGenreText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/detailPoster"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
-                    android:text="@string/details_genre"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/detailSynopsis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/detailGenreText"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/synopsis_text_size" />
 
-                <TextView
-                    android:id="@+id/detailSynopsis"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@id/detailGenreText"
-                    android:text="Synopsis"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@android:color/white"
-                    android:textSize="16dp" />
+        </RelativeLayout>
 
-            </RelativeLayout>
-
-        </ScrollView>
-
-    </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

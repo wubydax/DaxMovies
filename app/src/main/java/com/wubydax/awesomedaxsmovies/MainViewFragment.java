@@ -106,7 +106,7 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
         Point size = new Point();
         display.getSize(size);
         int displayWidth = size.x;
-        int columns = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) ? 3 : 5;
+        int columns = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) ? c.getResources().getInteger(R.integer.columns_num_portrait) : c.getResources().getInteger(R.integer.columns_num_landscape);
 
         width = (displayWidth - spacing * 4) / columns;
         height = Math.round(width * 1.5F);
