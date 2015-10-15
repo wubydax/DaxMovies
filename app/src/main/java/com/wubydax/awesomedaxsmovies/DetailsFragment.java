@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,15 +36,10 @@ import java.util.List;
 public class DetailsFragment extends Fragment {
     private Bitmap mBg;
     private JsonResponse.Results movieData;
-    private Context c;
-    private String LOG_TAG = "DetailsFragment";
-    private int width, height;
+    private String mTitle;
     private FragmentCallbackListener mListener;
-    private String mTitle, mDate, mRating, mSynopsis;
-    private double mRatingDouble;
     private DataFragment dataFragment;
     private HashMap<Integer, String> genreHashMap;
-    private List<Integer> genreIdList;
     Utils utils;
 
 
@@ -83,7 +77,7 @@ public class DetailsFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, String.format(getString(R.string.share_intent_string), movieData.getTitle(), getIntentString()));
-                startActivity(Intent.createChooser(intent, "Share this movie"));
+                startActivity(Intent.createChooser(intent, getActivity().getString(R.string.intent_picker_title)));
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -99,10 +93,9 @@ public class DetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        c = getActivity();
-        utils = new Utils(c);
-        width = Math.round(getResources().getDimension(R.dimen.blured_image_width));
-        height = Math.round(getResources().getDimension(R.dimen.blured_image_height));
+        utils = new Utils(getActivity());
+        int width = Math.round(getResources().getDimension(R.dimen.blured_image_width));
+        int height = Math.round(getResources().getDimension(R.dimen.blured_image_height));
         dataFragment = (DataFragment) getFragmentManager().findFragmentByTag("data");
         movieData = dataFragment.getMovieData();
         mBg = dataFragment.getBitmap();
@@ -119,11 +112,11 @@ public class DetailsFragment extends Fragment {
         mPosterView.setImageBitmap(mBg);
 
         mTitle = movieData.getTitle();
-        mDate = movieData.getReleaseDate();
-        mRating = String.valueOf(movieData.getVoteAverage());
-        mSynopsis = movieData.getOverview();
-        genreIdList = movieData.getGenreIds();
-        mRatingDouble = Double.parseDouble(mRating);
+        String mDate = movieData.getReleaseDate();
+        String mRating = String.valueOf(movieData.getVoteAverage());
+        String mSynopsis = movieData.getOverview();
+        List<Integer> genreIdList = movieData.getGenreIds();
+        Double mRatingDouble = Double.parseDouble(mRating);
         mTitleText.setText(Html.fromHtml("<b>" + mTitle + "</b>"));
         mDateText.setText(String.format(getString(R.string.details_release_date), mDate));
         mRatingText.setText(String.format(getString(R.string.details_rating), mRating));
@@ -200,6 +193,7 @@ public class DetailsFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
+        String LOG_TAG = "DetailsFragment";
         super.onAttach(context);
         try {
             mListener = (FragmentCallbackListener) context;

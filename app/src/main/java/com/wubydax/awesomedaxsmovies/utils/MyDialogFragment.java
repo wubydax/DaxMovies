@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -31,22 +30,21 @@ public class MyDialogFragment extends DialogFragment {
         Bundle params = getArguments();
         String mContent = params.getString("content", null);
         mBuilder = new AlertDialog.Builder(c);
-        switch(mContent){
-            case("NoConnection"):
-               buildDialog(c.getString(R.string.device_offline_title), c.getString(R.string.device_offline_message));
+        switch (mContent) {
+            case ("NoConnection"):
+                buildDialog(c.getString(R.string.device_offline_title), c.getString(R.string.device_offline_message));
                 break;
-            case("NoData"):
+            case ("NoData"):
                 buildDialog(c.getString(R.string.no_data_title), c.getString(R.string.no_data_message));
                 break;
 
 
         }
 
-        AlertDialog dialog = mBuilder.create();
-        return dialog;
+        return mBuilder.create();
     }
 
-    private void buildDialog(String title, String message){
+    private void buildDialog(String title, String message) {
         mBuilder.setTitle(title)
                 .setMessage(message)
                 .setNegativeButton(android.R.string.ok, null);

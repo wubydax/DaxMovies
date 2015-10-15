@@ -17,13 +17,12 @@ public class DataFragment extends Fragment {
     private JsonResponse.Results movieData;
     private Bitmap posterBitmap;
     private List<JsonResponse.Results> movieDataList;
-    private boolean isSearch, isListNull, isLoading, isRefreshMenu;
+    private boolean isSearch;
+    private boolean isLoading;
+    private boolean isRefreshMenu;
     private int pageNumber, totalPagesNumber;
     private HashMap<Integer, String> hashMapGenres;
     private String mQuery;
-
-
-
 
 
     public DataFragment() {
@@ -72,7 +71,7 @@ public class DataFragment extends Fragment {
 
 
     public int getPageNumber() {
-        if(pageNumber==0){
+        if (pageNumber == 0) {
             return 1;
         }
         return pageNumber;
@@ -80,14 +79,6 @@ public class DataFragment extends Fragment {
 
     public void setPageNumber(int pageNumber) {
         this.pageNumber = pageNumber;
-    }
-    public boolean isListNull() {
-        if(getMovieDataList()!=null){
-            isListNull = false;
-        }else{
-            isListNull = true;
-        }
-        return isListNull;
     }
 
 

@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Now in Cinemas</string>
+    <string name="app_name">Cinema View</string>
 
     <!-- Strings for various dialogs -->
     <string name="device_offline_title">Device Offline</string>
@@ -23,6 +23,7 @@
 
     <!--Json parsing and retrieving related strings -->
     <string name="db_poster_path_beginning" translatable = "false">http://image.tmdb.org/t/p/w185</string>
+    <string name="base_url" translatable = "false">http://api.themoviedb.org</string>
 
     <!--Menu strings -->
     <string name="menu_sort">Sort</string>
@@ -38,6 +39,7 @@
     <string name="details_release_date">Released: %1$s</string>
     <string name="title_activity_welcome" translatable="false">WelcomeActivity</string>
     <string name="share_intent_string">Hi! I found this movie called \"%1$s\" and it looks really nice. Check it out \n%2$s</string>
+    <string name="intent_picker_title">Share this movie</string>
     <string name="details_genre">Genre: </string>
 
 

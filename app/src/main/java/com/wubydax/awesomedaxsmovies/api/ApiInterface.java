@@ -5,9 +5,7 @@ import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
-/**
- * Created by Anna Berkovitch on 04/10/2015.
- */
+
 public interface ApiInterface {
     @GET("/3/movie/{sort}")
     Call<JsonResponse> getDataList(@Path("sort") String path,

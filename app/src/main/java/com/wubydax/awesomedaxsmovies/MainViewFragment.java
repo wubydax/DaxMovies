@@ -2,7 +2,6 @@ package com.wubydax.awesomedaxsmovies;
 
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,7 +32,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -94,7 +92,6 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
         c = getActivity();
         LOG_TAG = "MainViewFragment";
         SORT_KEY = "sort_by";
-        Log.d(LOG_TAG, "onCreate() called");
         mPrefs = PreferenceManager.getDefaultSharedPreferences(c);
         setupDataFragment();
         setupDimens();
@@ -127,7 +124,6 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "onCreateView() called");
 
         final View rootView = inflater.inflate(R.layout.fragment_movies_grid, container, false);
 
@@ -152,7 +148,6 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
         isRefresh = dataFragment.isRefreshMenu();
         pageNumber = dataFragment.getPageNumber();
         totalPagesNumber = dataFragment.getTotalPagesNumber();
-        Log.d(LOG_TAG, "page number is " + String.valueOf(pageNumber));
         mList = dataFragment.getMovieDataList();
 
 
@@ -160,9 +155,6 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
             mAdapter = new MovieAdapter(c, mList, width, height);
             mGridView.setAdapter(mAdapter);
         }
-
-
-        Log.d(LOG_TAG, "onViewCreated isLoading is " + String.valueOf(isLoading));
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             Bitmap mBitmap;
@@ -225,17 +217,16 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 mLastVisibleItem = firstVisibleItem + visibleItemCount;
                 if (totalItemCount > 0 && !isLoading && mLastVisibleItem == totalItemCount && totalItemCount == mList.size() && pageNumber < totalPagesNumber) {
+
                     isLoading = true;
-                    Log.d(LOG_TAG, "onScroll setting isLoading to true");
                     pageNumber++;
+
                     if (!isSearch) {
                         fetchData(false, null);
                     } else {
                         fetchData(true, mQuery);
                     }
                 }
-
-
             }
         });
 
@@ -246,13 +237,11 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(LOG_TAG, "onResume() called");
         mPrefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.d(LOG_TAG, "onCreateOptionsMenu() called ");
         sort = menu.findItem(R.id.action_sort);
         search = menu.findItem(R.id.search);
         refresh = menu.findItem(R.id.refresh);
@@ -293,9 +282,8 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
                 mQuery = query;
                 searchView.clearFocus();
                 isSearch = true;
-                Toast.makeText(c, "search for " + query, Toast.LENGTH_SHORT).show();
                 pageNumber = 1;
-                fetchData(isSearch, query);
+                fetchData(true, query);
                 return true;
             }
 
@@ -306,7 +294,6 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
                     isSearch = false;
                     pageNumber = 1;
                     fetchData(false, null);
-                    Toast.makeText(c, "Search cleared", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
@@ -323,7 +310,7 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
                 fetchData(false, null);
                 break;
             case (R.id.action_sort):
-                Dialog mDialog = new AlertDialog.Builder(c)
+                new AlertDialog.Builder(c)
                         .setTitle(R.string.sort_dialog_title)
                         .setSingleChoiceItems(getResources().getStringArray(R.array.dialog_sort_options), Arrays.asList(getResources().getStringArray(R.array.dialog_sort_values)).indexOf(mPrefs.getString("sort_by", "popular")), new DialogInterface.OnClickListener() {
                             @Override
@@ -341,11 +328,11 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
                             }
                         })
                         .setCancelable(true)
-                        .create();
-                mDialog.show();
+                        .create()
+                        .show();
                 break;
-
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -355,7 +342,7 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
         final String api_key = BuildConfig.TMDB_KEY;
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.themoviedb.org")
+                .baseUrl(c.getString(R.string.base_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -418,7 +405,6 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
             @Override
             public void onFailure(Throwable t) {
                 handleDataFetchError();
-
             }
         });
     }
@@ -436,7 +422,7 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
         setMenuItemsVisibility(false);
         for (int i = 0; i < jr.getResults().size(); i++) {
             JsonResponse.Results result = jr.getResults().get(i);
-            if (!result.isAdult() && result.getPosterPath() != null && result.getOriginalLanguage().equals("en")) {
+            if (!result.isAdult() && result.getPosterPath() != null) {
                 mList.add(result);
             }
         }
@@ -519,15 +505,12 @@ public class MainViewFragment extends Fragment implements SharedPreferences.OnSh
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d(LOG_TAG, "onSharedPreferenceChanged called");
 
         if (key.equals(SORT_KEY)) {
             pageNumber = 1;
             mListener.updateTitleBySort();
             fetchData(false, null);
         }
-
-
     }
 
 

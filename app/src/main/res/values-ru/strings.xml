@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Новинки синематографа</string>
+    <string name="app_name">Взгляд на кино</string>
 
     <!-- Strings for various dialogs -->
     <string name="device_offline_title">Аппарат в оффлайновом режиме</string>
@@ -29,7 +29,7 @@
     <string name="details_release_date">Дата примьеры: %1$s</string>
     <string name="share_intent_string">Привет! Тут киношка, называется \"%1$s\". По-моему не плохой фильм. Вот ссылка \n%2$s</string>
     <string name="details_genre">Жанр:</string>
-
+    <string name="intent_picker_title">Поделиться фильмом</string>
 
 
 </resources>

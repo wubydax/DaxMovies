@@ -1,8 +1,6 @@
 package com.wubydax.awesomedaxsmovies.api;
 
-/**
- * Created by Anna Berkovitch on 12/10/2015.
- */
+
 import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
@@ -12,7 +10,7 @@ public class GenreResponse {
 
     @SerializedName("genres")
     @Expose
-    private List<Genre> genres = new ArrayList<Genre>();
+    private List<Genre> genres = new ArrayList<>();
 
     /**
      *
@@ -23,14 +21,6 @@ public class GenreResponse {
         return genres;
     }
 
-    /**
-     *
-     * @param genres
-     * The genres
-     */
-    public void setGenres(List<Genre> genres) {
-        this.genres = genres;
-    }
 
     public class Genre {
 

@@ -9,9 +9,7 @@ import android.util.Log;
 
 import com.wubydax.awesomedaxsmovies.R;
 
-/**
- * Created by dax on 24/09/15.
- */
+
 public class Utils {
     Context context;
     String LOG_TAG;
