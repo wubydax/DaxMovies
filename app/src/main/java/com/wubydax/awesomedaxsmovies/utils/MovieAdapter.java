@@ -18,9 +18,7 @@ import com.wubydax.awesomedaxsmovies.api.JsonResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Anna Berkovitch on 21/09/2015.
- */
+
 public class MovieAdapter extends BaseAdapter {
     List<JsonResponse.Results> mList;
     Context c;
@@ -82,9 +80,9 @@ public class MovieAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        String mTitle = "";
-        String mUrlLastSegment = "";
-        String mFullUrl = "";
+        String mTitle;
+        String mUrlLastSegment;
+        String mFullUrl;
         ViewHolder vh;
 
         mTitle = mList.get(position).getTitle();
@@ -93,7 +91,7 @@ public class MovieAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = mInflater.inflate(R.layout.grid_view_item_layout, null, false);
+            convertView = mInflater.inflate(R.layout.grid_view_item_layout, parent, false);
             convertView.setLayoutParams(layoutParams);
             vh = new ViewHolder(convertView);
             convertView.setTag(vh);

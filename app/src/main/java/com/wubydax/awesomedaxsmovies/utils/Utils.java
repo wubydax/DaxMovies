@@ -71,7 +71,7 @@ public class Utils {
             rs.destroy();
             return blurredBitmap;
         } catch (Exception e) {
-            Log.d(LOG_TAG, "blurBitmap error bluring bitmap ", e);
+            Log.e(LOG_TAG, "blurBitmap error blurring bitmap ", e);
             return bitmap;
         }
 
