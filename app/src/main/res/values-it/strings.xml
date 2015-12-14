@@ -13,6 +13,7 @@
         <item>Miglior valutazione</item>
         <item>Adesso al cinema</item>
         <item>Prossime uscite</item>
+        <item>Film Preferiti</item>
     </string-array>
 
     <!--Menu strings -->
@@ -30,6 +31,14 @@
     <string name="share_intent_string">Ciao! ho trovato questo film: \"%1$s\" e sembra molto bello. Dagli un\' occhiata\n%2$s</string>
     <string name="intent_picker_title">Condividi questo film</string>
     <string name="details_genre">Genere: </string>
+    <string name="show_more">Mostra Trailers e Recensioni</string>
+    <string name="hide_more">Nascondi Trailers e Recensioni</string>
+    <string name="no_trailers">Nessun Trailer disponibile</string>
+    <string name="no_reviews">Nessuna Recensione disponibile</string>
+    <string name="added_success">" è stato aggiunto con successo ai Preferiti"</string>
+    <string name="failure_adding_to_favourites">"Errore nell'aggiungere "</string>
+    <string name="removed_from_db">" è stato rimosso dalla tua lista dei Preferiti"</string>
+    <string name="favourites_empty_toast">Nessun film è stato aggiunto ai Preferiti. Devi aggiungerne almeno uno per poter accedere alla sezione Preferiti.</string>
 
 
 </resources>

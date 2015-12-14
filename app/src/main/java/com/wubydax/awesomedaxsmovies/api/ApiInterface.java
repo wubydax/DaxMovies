@@ -19,4 +19,12 @@ public interface ApiInterface {
 
     @GET("/3/genre/movie/list")
     Call<GenreResponse> getGenreScheme(@Query("api_key") String apiKey);
+
+    @GET("/3/movie/{id}/reviews")
+    Call<Reviews> getReviews(@Path("id") String id,
+                             @Query("api_key") String apiKey);
+
+    @GET("/3/movie/{id}/videos")
+    Call<Videos> getVideos (@Path("id") String id,
+                             @Query("api_key") String apiKey);
 }

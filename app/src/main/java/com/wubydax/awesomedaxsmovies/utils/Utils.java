@@ -2,12 +2,15 @@ package com.wubydax.awesomedaxsmovies.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
 
 import com.wubydax.awesomedaxsmovies.R;
+
+import java.io.ByteArrayOutputStream;
 
 
 public class Utils {
@@ -32,6 +35,9 @@ public class Utils {
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
         hsv[2] *= 0.8f;
+        String primaryColor = String.format("#%06X", 0xFFFFFF & color);
+        String primaryDarkColor = String.format("#%06X", 0xFFFFFF & Color.HSVToColor(hsv));
+        Log.d(LOG_TAG, "primary color is " + primaryColor + "and primaryDark color is " + primaryDarkColor);
         return Color.HSVToColor(hsv);
     }
 
@@ -77,7 +83,18 @@ public class Utils {
 
     }
 
-    public Drawable getRatingImage(Double rating){
+    public byte[] getBytes(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
+    // convert from byte array to bitmap
+    public  Bitmap getImage(byte[] image) {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+
+    public Drawable getRatingImage(float rating){
         int roundedRating = (int) Math.round(rating);
         int mIdentifier = context.getResources().getIdentifier("rating_" + String.valueOf(roundedRating), "drawable", context.getPackageName());
         return context.getResources().getDrawable(mIdentifier);

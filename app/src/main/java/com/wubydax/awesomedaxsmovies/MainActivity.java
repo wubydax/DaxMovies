@@ -5,11 +5,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 
 import com.wubydax.awesomedaxsmovies.utils.FragmentCallbackListener;
@@ -18,18 +21,25 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements FragmentCallbackListener, FragmentManager.OnBackStackChangedListener {
     MainViewFragment mainViewFragment;
+    boolean isTwoPane;
     SharedPreferences sp;
     MenuItem search;
-    String LOG_TAG = "MainActivity";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        View detailsFragmentContainer = findViewById(R.id.detailsFragmentContainer);
+        isTwoPane = detailsFragmentContainer != null;
+
         if (savedInstanceState == null) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isNewState", true);
+            bundle.putBoolean("isTwoPane", isTwoPane);
             mainViewFragment = new MainViewFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.container, new MainViewFragment()).commit();
+            mainViewFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().add(R.id.container, mainViewFragment).commit();
         }
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         updateTitleBySort();
@@ -44,8 +54,10 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem share = menu.findItem(R.id.share);
+        MenuItem fav = menu.findItem(R.id.action_favourite);
         search = menu.findItem(R.id.search);
         share.setVisible(false);
+        fav.setVisible(false);
 
         return true;
     }
@@ -70,15 +82,18 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
     @Override
     public void onFragmentCall(String title, int colorPrimary, int colorPrimaryDark, boolean isDetails) {
         if (isDetails) {
-            setTitle(title);
+            if (!isTwoPane) {
+                setTitle(title);
+            }
         } else {
             updateTitleBySort();
         }
         ColorDrawable colorDrawable = new ColorDrawable(colorPrimary);
         try {
             getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
         } catch (NullPointerException e) {
-            Log.e(LOG_TAG, "onFragmentCall error setting bgDrawable ", e);
+            Log.e("actionbar null", e.toString());
         }
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(colorPrimaryDark);
@@ -87,13 +102,22 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
 
     @Override
     public void onListItemClick() {
-        DetailsFragment detailsFragment = new DetailsFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.container, detailsFragment)
-                .addToBackStack(null)
-                .commit();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        DetailsFragment detailsFragment = DetailsFragment.newInstance(isTwoPane);
+
+        if (!isTwoPane) {
+            ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.container, detailsFragment)
+                    .addToBackStack(null)
+                    .commit();
+        } else {
+
+            ft.detach(getSupportFragmentManager().findFragmentByTag("details"))
+                    .replace(R.id.detailsFragmentContainer, DetailsFragment.newInstance(isTwoPane), "details")
+                    .commit();
+
+        }
 
     }
 
@@ -106,8 +130,28 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbackL
     }
 
     @Override
+    public void detailsInfoReady() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (isTwoPane) {
+            DetailsFragment detailsFragment = DetailsFragment.newInstance(true);
+            Fragment old = getSupportFragmentManager().findFragmentByTag("details");
+            if (old != null) {
+                ft.detach(old)
+                        .commit();
+            }
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.detailsFragmentContainer, detailsFragment, "details")
+                    .commit();
+        }
+    }
+
+    @Override
     public void onBackStackChanged() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(isHomeUpNeeded());
+        try {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(isHomeUpNeeded());
+        } catch (NullPointerException e) {
+            Log.e("No support action bar ", e.toString());
+        }
 
     }
 

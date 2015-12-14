@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.wubydax.awesomedaxsmovies.api.JsonResponse;
+import com.wubydax.awesomedaxsmovies.api.Reviews;
+import com.wubydax.awesomedaxsmovies.api.Videos;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +19,11 @@ public class DataFragment extends Fragment {
     private JsonResponse.Results movieData;
     private Bitmap posterBitmap;
     private List<JsonResponse.Results> movieDataList;
-    private boolean isSearch;
-    private boolean isLoading;
-    private boolean isRefreshMenu;
-    private int pageNumber, totalPagesNumber;
+    private boolean isSearch, isLoading, isRefreshMenu, isFavourites, isExpanded;
+    private List<Reviews.Result> reviewList;
+    private List<Videos.Result> trailersList;
+    private int pageNumber, totalPagesNumber, mScrollPosition;
+    private long id, jsonMovieId;
     private HashMap<Integer, String> hashMapGenres;
     private String mQuery;
 
@@ -35,15 +38,35 @@ public class DataFragment extends Fragment {
         setRetainInstance(true);
     }
 
+    public boolean isFavourites() {
+        return isFavourites;
+    }
+
+    public void setIsFavourites(boolean isFavourites) {
+        this.isFavourites = isFavourites;
+    }
+
     public void setDetailsData(JsonResponse.Results movieData, Bitmap poster) {
         this.movieData = movieData;
         posterBitmap = poster;
 
     }
 
+    public void setCursorDetailsData(Long id, Bitmap poster) {
+        this.id = id;
+        posterBitmap = poster;
+    }
+
     public void setMovieData(List<JsonResponse.Results> movieDataList) {
         this.movieDataList = movieDataList;
 
+    }
+
+    public long getMovieId() {
+        if(id > 0) {
+            return id;
+        }
+        return 0;
     }
 
 
@@ -123,5 +146,45 @@ public class DataFragment extends Fragment {
 
     public void setIsRefreshMenu(boolean isRefreshMenu) {
         this.isRefreshMenu = isRefreshMenu;
+    }
+
+    public int getmScrollPosition() {
+        return mScrollPosition;
+    }
+
+    public void setmScrollPosition(int mScrollPosition) {
+        this.mScrollPosition = mScrollPosition;
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setIsExpanded(boolean isExpanded) {
+        this.isExpanded = isExpanded;
+    }
+
+    public List<Reviews.Result> getReviewList() {
+        return reviewList;
+    }
+
+    public void setReviewList(List<Reviews.Result> reviewList) {
+        this.reviewList = reviewList;
+    }
+
+    public List<Videos.Result> getTrailersList() {
+        return trailersList;
+    }
+
+    public void setTrailersList(List<Videos.Result> trailersList) {
+        this.trailersList = trailersList;
+    }
+
+    public long getJsonMovieId() {
+        return jsonMovieId;
+    }
+
+    public void setJsonMovieId(long jsonMovieId) {
+        this.jsonMovieId = jsonMovieId;
     }
 }

@@ -18,6 +18,12 @@
         android:icon="@drawable/ic_action_sort"/>
 
     <item
+        android:id="@+id/action_favourite"
+        android:title="@string/menu_sort"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_fav"/>
+
+    <item
         android:id="@+id/share"
         android:title="@string/menu_share"
         android:icon="@drawable/ic_action_share"

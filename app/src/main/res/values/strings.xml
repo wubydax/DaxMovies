@@ -13,17 +13,19 @@
         <item>Top rated movies</item>
         <item>Now in theatres</item>
         <item>Coming soon</item>
+        <item>Favourites</item>
     </string-array>
     <string-array name="dialog_sort_values" translatable = "false">
         <item>popular</item>
         <item>top_rated</item>
         <item>now_playing</item>
         <item>upcoming</item>
+        <item>favourites</item>
     </string-array>
 
     <!--Json parsing and retrieving related strings -->
-    <string name="db_poster_path_beginning" translatable = "false">http://image.tmdb.org/t/p/w185</string>
-    <string name="base_url" translatable = "false">http://api.themoviedb.org</string>
+    <string name="db_poster_path_beginning" translatable="false">http://image.tmdb.org/t/p/w185</string>
+    <string name="base_url" translatable="false">http://api.themoviedb.org</string>
 
     <!--Menu strings -->
     <string name="menu_sort">Sort</string>
@@ -41,6 +43,14 @@
     <string name="share_intent_string">Hi! I found this movie called \"%1$s\" and it looks really nice. Check it out \n%2$s</string>
     <string name="intent_picker_title">Share this movie</string>
     <string name="details_genre">Genre: </string>
+    <string name="show_more">Show Trailers and Reviews</string>
+    <string name="hide_more">Hide Trailers and Reviews</string>
+    <string name="no_trailers">No trailers available</string>
+    <string name="no_reviews">No reviews available</string>
+    <string name="added_success">" was successfully added to favourites"</string>
+    <string name="failure_adding_to_favourites">"Failed to add "</string>
+    <string name="removed_from_db">" was removed from your favourites list"</string>
+    <string name="favourites_empty_toast">No movies have been added to favourites. You need to add at least one movie to be able to navigate to the favourites section.</string>
 
 
 </resources>

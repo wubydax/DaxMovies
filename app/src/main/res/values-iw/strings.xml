@@ -13,6 +13,7 @@
         <item>מדורגים הכי גבוה</item>
         <item>עכשיו בבתי קולנוע</item>
         <item>בקרוב</item>
+        <item>מועדפים</item>
     </string-array>
 
 
@@ -31,6 +32,14 @@
     <string name="share_intent_string">הי! מצאתי סרט שנקרא \"%1$s\" וזה נראה נחמד. הנה הקישור \n%2$s</string>
     <string name="details_genre">ז\'אנר:</string>
     <string name="intent_picker_title">שתף סרט</string>
+    <string name="no_reviews">לא נמצאו סקירות</string>
+    <string name="no_trailers">לא נמצאו טריילרים</string>
+    <string name="removed_from_db"> הוסר ממועדפים</string>
+    <string name="show_more">הצג סקירות וטריילרים</string>
+    <string name="added_success"> הוסף למועדפים בהצלחה</string>
+    <string name="failure_adding_to_favourites" translatable="false">הוספת סרט לא הצליחה</string>
+    <string name="favourites_empty_toast">לא נמצאו סרטים ברשימת המועדפים. על מנת לעבור לתצוגת מועדפים, יש להוסיף לפחות סרט אחד</string>
+    <string name="hide_more">הסתר טריילרים וסקירות</string>
 
 
 </resources>

@@ -13,6 +13,7 @@
         <item>Фильмы высоким рейтингом</item>
         <item>Сейчас в кинотеатрах</item>
         <item>Скоро на экранах</item>
+        <item>Список фаворитов</item>
     </string-array>
 
 
@@ -30,6 +31,14 @@
     <string name="share_intent_string">Привет! Тут киношка, называется \"%1$s\". По-моему не плохой фильм. Вот ссылка \n%2$s</string>
     <string name="details_genre">Жанр:</string>
     <string name="intent_picker_title">Поделиться фильмом</string>
+    <string name="added_success"> успешно добавлен в спифок фаворитов</string>
+    <string name="failure_adding_to_favourites">Не удалось добавить фильм</string>
+    <string name="favourites_empty_toast">В списке фаворитов не найдено ни одного фильма. Пожалуйста, добавьте хотя бы один фильм для того, чтобы открыть эту закладку.</string>
+    <string name="hide_more">Скрыть обзоры и трейлеры</string>
+    <string name="no_reviews">Не найдено обзоров</string>
+    <string name="no_trailers">Не найдено трейлеров</string>
+    <string name="show_more">Показать обзоры и трейлеры</string>
+    <string name="removed_from_db"> был удалён из списка фаворитов</string>
 
 
 </resources>
